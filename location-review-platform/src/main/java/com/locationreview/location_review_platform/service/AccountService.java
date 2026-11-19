@@ -77,8 +77,7 @@ public class AccountService {
     public UserPublic publicProfile(long id) { return publicView(get(id)); }
     private User get(long id) { return users.findById(id).orElseThrow(() -> new AccountException(HttpStatus.NOT_FOUND, "user_not_found", "User not found.", Map.of())); }
     private UserPublic publicView(User user) {
-        String initial = user.getDisplayName().substring(0, user.getDisplayName().offsetByCodePoints(0, 1)).toUpperCase(Locale.ROOT);
-        return new UserPublic(user.getId(), user.getUsername(), user.getDisplayName(), user.getBiography(), initial, follows.countByFollowedId(user.getId()), follows.countByFollowerId(user.getId()));
+        return UserPublic.from(user, follows.countByFollowedId(user.getId()), follows.countByFollowerId(user.getId()));
     }
     private UserSelf self(User user) {
         UserPublic view = publicView(user);

@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="identity(person)" class="person-row">
+    <span class="profile-initial" aria-hidden="true" th:text="${person.avatarPlaceholder}"></span>
+    <div>
+        <a class="person-name" th:href="@{/users/{id}(id=${person.id})}" th:text="${person.displayName}"></a>
+        <p class="person-username" th:text="'@' + ${person.username}"></p>
+        <p class="person-biography" th:if="${!#strings.isEmpty(person.biography)}" th:text="${person.biography}"></p>
+    </div>
+</div>
+</body>
+</html>

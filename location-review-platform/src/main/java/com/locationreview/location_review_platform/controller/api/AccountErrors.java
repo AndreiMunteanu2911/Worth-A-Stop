@@ -5,7 +5,8 @@ import java.net.URI;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-@RestControllerAdvice(assignableTypes = {AccountApiController.class, ReviewApiController.class, CollectionApiController.class, BookmarkApiController.class})
+@RestControllerAdvice(assignableTypes = {AccountApiController.class, ReviewApiController.class, CollectionApiController.class,
+        BookmarkApiController.class, PeopleApiController.class})
 public class AccountErrors {
     @ExceptionHandler(AccountException.class)
     ProblemDetail account(AccountException exception, jakarta.servlet.http.HttpServletRequest request) {
@@ -22,7 +23,9 @@ public class AccountErrors {
         exception.getBindingResult().getFieldErrors().forEach(error -> errors.putIfAbsent(error.getField(), error.getDefaultMessage()));
         problem.setProperty("fieldErrors", errors); return problem;
     }
-    @ExceptionHandler({org.springframework.http.converter.HttpMessageNotReadableException.class, org.springframework.web.method.annotation.MethodArgumentTypeMismatchException.class})
+    @ExceptionHandler({org.springframework.http.converter.HttpMessageNotReadableException.class,
+            org.springframework.web.method.annotation.MethodArgumentTypeMismatchException.class,
+            org.springframework.web.bind.MissingServletRequestParameterException.class})
     ProblemDetail invalid(Exception exception, jakarta.servlet.http.HttpServletRequest request) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Invalid request.");
         problem.setInstance(URI.create(request.getRequestURI())); problem.setProperty("code", "invalid_request"); return problem;

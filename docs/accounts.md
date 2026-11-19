@@ -6,4 +6,6 @@ Usernames are trimmed and lowercased and must contain 3–30 ASCII letters, digi
 
 The JSON API provides `POST /api/v1/auth/register`, `GET /api/v1/users/me`, `PATCH /api/v1/users/me`, and `GET /api/v1/users/{id}`. API mutations require a CSRF token; the account endpoints use the same server-side session as the website. Registration returns 201 and starts a session. The self endpoints require authentication. Public profile responses contain no email or password hash. The OpenAPI document at `/v3/api-docs` and Swagger UI describe these operations.
 
+Public profiles include linked follower and following counts. Visit [People and follows](people.md) for profile search, connection lists, and follow controls.
+
 Place discovery is available at `/explore`, the default destination after login. Password changes and account deletion are not available.

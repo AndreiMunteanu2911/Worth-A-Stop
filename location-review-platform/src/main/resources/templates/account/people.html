@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pageTitle} + ' | Location Review Platform'">People | Location Review Platform</title>
+    <link rel="stylesheet" th:href="@{/css/tokens.css}">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/account.css}">
+    <script type="module" th:src="@{/js/shell.js}"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div th:replace="~{fragments/shell :: header}"></div>
+<main id="main" class="shell account-main">
+    <h1 th:text="${pageTitle}">People</h1>
+    <p th:if="${profile}">
+        <a th:href="@{/users/{id}(id=${profile.id})}" th:text="${profile.displayName}">Profile</a>
+        · <a th:href="@{/people}">Find people</a>
+    </p>
+    <form th:if="${peoplePage}" method="get" th:action="@{/people}" class="account-form people-search">
+        <label for="people-query">Username or display name</label>
+        <div class="people-search-controls">
+            <input type="search" id="people-query" name="q" required th:value="${q}"
+                   th:attr="aria-invalid=${searchError} ? 'true' : null,aria-describedby=${searchError} ? 'people-search-error' : null">
+            <button type="submit">Search</button>
+        </div>
+        <p id="people-search-error" class="form-error" role="alert" th:if="${searchError}" th:text="${searchError}"></p>
+    </form>
+    <th:block th:if="${people}">
+        <p th:if="${people.totalElements == 0}" th:text="${peoplePage} ? 'No people match your search.' : ${emptyMessage}"></p>
+        <p th:if="${people.totalElements > 0 and #lists.isEmpty(people.items)}">No people on this page.</p>
+        <ul class="people-list" th:unless="${#lists.isEmpty(people.items)}">
+            <li th:each="person : ${people.items}">
+                <div th:replace="~{fragments/people :: identity(${person})}"></div>
+            </li>
+        </ul>
+        <nav class="people-pages" th:if="${people.totalPages > 1 or people.page > 0}" aria-label="People pages">
+            <a th:if="${people.page > 0 and peoplePage}" th:href="@{/people(q=${q},page=${people.page - 1})}">Previous</a>
+            <a th:if="${people.page > 0 and !peoplePage}" th:href="@{${directoryPath}(page=${people.page - 1})}">Previous</a>
+            <span th:if="${people.page < people.totalPages}" th:text="'Page ' + ${people.page + 1} + ' of ' + ${people.totalPages}"></span>
+            <a th:if="${people.page + 1 < people.totalPages and peoplePage}" th:href="@{/people(q=${q},page=${people.page + 1})}">Next</a>
+            <a th:if="${people.page + 1 < people.totalPages and !peoplePage}" th:href="@{${directoryPath}(page=${people.page + 1})}">Next</a>
+        </nav>
+    </th:block>
+</main>
+<div th:replace="~{fragments/shell :: footer}"></div>
+</body>
+</html>
