@@ -7,7 +7,7 @@ Set-Location $PSScriptRoot
 # Prefer existing process credentials; otherwise load private values from .env.
 if (Test-Path ".env") {
     Get-Content ".env" | ForEach-Object {
-        if ($_ -match '^\s*(MYSQL_PASSWORD|MYSQL_ROOT_PASSWORD)=(.*)$') {
+        if ($_ -match '^\s*(MYSQL_PASSWORD|MYSQL_ROOT_PASSWORD|GOOGLE_MAPS_SERVER_API_KEY|GOOGLE_MAPS_BROWSER_API_KEY)=(.*)$') {
             if ([string]::IsNullOrWhiteSpace([Environment]::GetEnvironmentVariable($matches[1], "Process"))) {
                 [Environment]::SetEnvironmentVariable($matches[1], $matches[2], "Process")
             }

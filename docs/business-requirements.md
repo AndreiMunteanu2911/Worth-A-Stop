@@ -44,3 +44,7 @@ Each requirement below has a stable identifier, an MVP feature mapping, and obse
 ## University requirement coverage
 
 This specification defines 20 business requirements, exceeding the university minimum of 10. They are grouped into five main MVP features in the companion document. Implementation evidence, testing results, and usage documentation will be published as the application is built and verified.
+
+## Google discovery revision — 2026-11-19
+
+The user replaced OSM/Overpass with Google Places API (New) and Maps JavaScript API. BR-03–05 discovery now uses Google identities, Google categories and 20-result candidate windows. Existing local review, account, collection and social requirements remain. Legacy OSM data is preserved; Google metadata is fetched on interaction and only Google IDs are retained for new places. This migration is authored and awaits verification.

@@ -34,3 +34,7 @@ erDiagram
 ```
 
 Accounts use the users table for registration, authentication and profile editing. Place discovery, reviews, collections and social workflows remain to be implemented.
+
+## Google identity migration
+
+V2__google_place_identity.sql adds nullable `google_place_id VARCHAR(255)` with an ASCII binary collation and a unique constraint. It makes legacy OSM identity/metadata columns nullable. A check permits either the existing OSM identity or a GOOGLE identity with all provider metadata columns null. New Google identities retain only their provider ID, source and application timestamps; metadata is fetched at read time. Existing OSM records and foreign keys from reviews, bookmarks and collection memberships are retained. V1 is unchanged. The Java 21 automated suite applied V1/V2 to isolated MySQL 8.4 databases and validated JPA mappings, the Google metadata constraint, concurrent identity resolution and persistence. These checks do not alter the developer database.

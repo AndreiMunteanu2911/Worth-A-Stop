@@ -10,6 +10,9 @@ public class HomeController {
     String home() {
         return "home";
     }
-    @GetMapping("/explore")
-    String explore() { return "explore-placeholder"; }
+    @GetMapping("/privacy")
+    String privacy() { return "privacy"; }
+    @GetMapping("/terms")
+    String terms() { return "terms"; }
+
 }

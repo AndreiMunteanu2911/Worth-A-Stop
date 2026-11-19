@@ -7,6 +7,7 @@
         <button class="menu-toggle" type="button" aria-controls="site-nav" aria-expanded="false">Menu</button>
         <nav id="site-nav" aria-label="Main navigation">
             <a th:href="@{/}">Home</a>
+            <a th:href="@{/explore}">Explore</a>
             <a th:href="@{/swagger-ui.html}">API documentation</a>
             <a th:if="${viewerId == null}" th:href="@{/login}">Log in</a>
             <a th:if="${viewerId == null}" th:href="@{/register}">Register</a>
@@ -19,7 +20,7 @@
 <footer th:fragment="footer" class="site-footer">
     <div class="shell footer-inner">
         <span>Location Review Platform</span>
-        <span>Geographic data and maps: <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a></span>
+        <span><a th:href="@{/privacy}">Privacy</a> · <a th:href="@{/terms}">Terms</a></span>
     </div>
 </footer>
 </body>

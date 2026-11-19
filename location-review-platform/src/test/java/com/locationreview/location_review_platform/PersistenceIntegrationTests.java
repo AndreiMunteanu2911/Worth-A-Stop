@@ -34,7 +34,7 @@ class PersistenceIntegrationTests {
 
     @Test
     void migrationMappingsConstraintsAndPersistence() throws Exception {
-        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM flyway_schema_history WHERE success = 1", Integer.class)).isEqualTo(1);
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM flyway_schema_history WHERE success = 1", Integer.class)).isEqualTo(2);
         User user = new User();
         user.setUsername("reader"); user.setEmail("reader@example.com"); user.setPasswordHash("hash");
         user.setDisplayName("Reader"); user.setBiography("");

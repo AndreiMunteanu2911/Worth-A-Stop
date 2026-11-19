@@ -13,6 +13,8 @@ class LocationReviewPlatformApplicationTests {
     com.locationreview.location_review_platform.repository.UserRepository users;
     @org.springframework.test.context.bean.override.mockito.MockitoBean
     com.locationreview.location_review_platform.repository.FollowRepository follows;
+    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    com.locationreview.location_review_platform.service.PlaceService places;
 
 	@Test
 	void contextLoads() {

@@ -45,3 +45,5 @@ People can find users by username or display name and view public profiles. A re
 ## Shared MVP quality criteria
 
 The first release is complete only when all five areas function through the GUI and documented REST API, persisted data survives restart, validation and access controls are enforced server-side, and the full build and tests pass. The interface uses a cohesive editorial design, responsive layouts, accessible controls, meaningful loading/empty/error states, and real data without fabricated places or reviews. Swagger/OpenAPI documentation must describe every custom REST endpoint. Detailed usage, API, testing, and demonstration documents will describe verified behavior when implementation is complete.
+
+Google provider revision: MVP-02 is now implemented in code against Google Places API (New) and Google Maps JavaScript. New place identities use Google IDs; existing OSM records remain readable. Nearby candidate limit is 20. The migration's execution and verification are pending; earlier OSM checks do not establish Google behavior.

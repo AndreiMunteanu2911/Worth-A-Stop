@@ -13,25 +13,28 @@ public class Place {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
+    @Column(length = 10)
     private OsmType osmType;
 
-    @Column(nullable = false)
+    @Column
     private Long osmId;
 
-    @Column(nullable = false, length = 255)
+    @Column(length = 255, unique = true)
+    private String googlePlaceId;
+
+    @Column(length = 255)
     private String name;
 
-    @Column(nullable = false, length = 100)
+    @Column(length = 100)
     private String category;
 
-    @Column(nullable = false, length = 100)
+    @Column(length = 100)
     private String osmTagValue;
 
-    @Column(nullable = false, precision = 10, scale = 7)
+    @Column(precision = 10, scale = 7)
     private BigDecimal latitude;
 
-    @Column(nullable = false, precision = 10, scale = 7)
+    @Column(precision = 10, scale = 7)
     private BigDecimal longitude;
 
     @Column(length = 500)
@@ -49,7 +52,7 @@ public class Place {
     @Column(nullable = false, length = 20)
     private String source;
 
-    @Column(nullable = false, columnDefinition = "datetime(6)")
+    @Column(columnDefinition = "datetime(6)")
     private Instant metadataFetchedAt;
 
     @Column(nullable = false, updatable = false, columnDefinition = "datetime(6)")
@@ -59,6 +62,8 @@ public class Place {
     private Instant updatedAt;
 
     public Long getId() { return id; }
+    public String getGooglePlaceId() { return googlePlaceId; }
+    public void setGooglePlaceId(String googlePlaceId) { this.googlePlaceId = googlePlaceId; }
 
     public OsmType getOsmType() { return osmType; }
     public void setOsmType(OsmType osmType) { this.osmType = osmType; }
