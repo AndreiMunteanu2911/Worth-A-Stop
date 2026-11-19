@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="header" class="site-header">
+    <div class="shell header-inner">
+        <a class="wordmark" th:href="@{/}" aria-label="Location Review Platform home">Location Review<span>Platform</span></a>
+        <button class="menu-toggle" type="button" aria-controls="site-nav" aria-expanded="false">Menu</button>
+        <nav id="site-nav" aria-label="Main navigation">
+            <a th:href="@{/}" aria-current="page">Home</a>
+            <a th:href="@{/swagger-ui.html}">API documentation</a>
+        </nav>
+    </div>
+</header>
+<footer th:fragment="footer" class="site-footer">
+    <div class="shell footer-inner">
+        <span>Location Review Platform</span>
+        <span>Geographic data and maps: <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a></span>
+    </div>
+</footer>
+</body>
+</html>

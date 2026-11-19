@@ -1,0 +1,16 @@
+:root {
+    --color-primary: #C34E35;
+    --color-primary-hover: #A63E29;
+    --color-background: #F2F0EB;
+    --color-surface: #FFFFFF;
+    --color-text: #20201E;
+    --color-text-muted: #77736C;
+    --color-text-muted-on-paper: #66615B;
+    --color-border: #D5D1C9;
+    --color-control-border: #77736C;
+    --color-accent: #C34E35;
+    --color-success: #28734F;
+    --color-error: #B23B35;
+    --color-focus: #20201E;
+    --radius-control: 3px;
+}
