@@ -12,3 +12,7 @@
 .profile-section { border-top: 1px solid var(--color-border); margin-top: 32px; padding-top: 24px; }
 .profile-initial { display: inline-grid; place-items: center; width: 48px; height: 48px; border: 1px solid var(--color-control-border); font-weight: 700; }
 @media (max-width: 767px) { .account-main { padding-block: 32px 64px; } }
+
+.account-form fieldset { border: 0; padding: 0; margin: 24px 0; }
+.account-form fieldset label { display: inline-flex; align-items: center; gap: 4px; margin: 8px 12px 8px 0; }
+.account-form fieldset input[type="radio"] { display: inline-block; width: auto; min-height: 0; }
