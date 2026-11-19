@@ -14,7 +14,7 @@ Public profiles show only public collections, even when viewed by their owner. M
 
 Private collections are available only to their owner; other viewers receive 404 for direct reads and mutations. Public collections can be read by anyone; only the owner may change them (other signed-in users receive 403). All mutations require authentication and CSRF protection. Private guides are excluded from public discovery, previews and profile lists.
 
-Creating a public collection sets its publication time. Public-to-private clears that time; private-to-public assigns a new one. Editing an already public guide or changing its items preserves its publication time. Collection edits update its modification time. Social feed integration is not yet available.
+Creating a public collection sets its publication time. Public-to-private clears that time; private-to-public assigns a new one. Editing an already public guide or changing its items preserves its publication time. Collection edits update its modification time. Current public publications appear in the [activity feed](feed.md) of users who follow the owner.
 
 ## JSON API
 

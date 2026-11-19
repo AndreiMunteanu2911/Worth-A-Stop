@@ -32,6 +32,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/register").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users/*/follow", "/reviews/*/like", "/reviews/*/comments", "/comments/*/delete").authenticated()
                 .requestMatchers("/api/v1/bookmarks", "/api/v1/bookmarks/**", "/saved", "/saved/**").authenticated()
+                .requestMatchers("/api/v1/feed", "/feed").authenticated()
                 .requestMatchers("/api/v1/users/me", "/settings/profile", "/reviews/new", "/reviews/*/edit", "/reviews/*/delete", "/collections/new", "/collections/*/edit", "/collections/*/delete", "/collections/*/places/**").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
                 .requestMatchers("/api/v1/**").authenticated().anyRequest().permitAll())

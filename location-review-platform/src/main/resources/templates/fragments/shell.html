@@ -9,6 +9,7 @@
             <a th:href="@{/}">Home</a>
             <a th:href="@{/explore}">Explore</a>
             <a th:href="@{/people}" th:attr="aria-current=${peoplePage == true} ? 'page' : null">People</a>
+            <a th:if="${viewerId != null}" th:href="@{/feed}" th:attr="aria-current=${feedPage == true} ? 'page' : null">Feed</a>
             <a th:href="@{/collections}">Collections</a>
             <a th:if="${viewerId != null}" th:href="@{/saved}" th:attr="aria-current=${savedPage == true} ? 'page' : null">Saved</a>
             <a th:href="@{/swagger-ui.html}">API documentation</a>

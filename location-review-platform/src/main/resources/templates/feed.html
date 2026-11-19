@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Feed | Location Review Platform</title>
+    <link rel="stylesheet" th:href="@{/css/tokens.css}">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/feed.css}">
+    <script type="module" th:src="@{/js/shell.js}"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div th:replace="~{fragments/shell :: header}"></div>
+<main id="main" class="shell feed-main">
+    <h1>Feed</h1>
+    <div class="feed-reading">
+        <div th:if="${feedError}">
+            <p th:text="${feedError}" role="alert"></p>
+            <a th:href="@{/feed}">Back to the feed</a>
+        </div>
+        <th:block th:if="${feed}">
+            <p th:if="${feed.totalElements == 0}">
+                No activity from people you follow yet. <a th:href="@{/people}">Find people to follow</a>.
+            </p>
+            <p th:if="${feed.totalElements > 0 and #lists.isEmpty(feed.items)}">
+                No activity on this page. <a th:href="@{/feed}">Go to the first page</a>.
+            </p>
+            <ol class="feed-list" role="list" th:unless="${#lists.isEmpty(feed.items)}">
+                <li th:each="item : ${feed.items}">
+                    <article>
+                        <p class="feed-meta">
+                            <a th:href="@{/users/{id}(id=${item.actor.id})}" th:text="${item.actor.displayName}"></a>
+                            <span th:text="${item.kind.name() == 'REVIEW_PUBLISHED'} ? 'wrote a review' : 'published a collection'"></span>
+                            <span aria-hidden="true"> · </span>
+                            <time th:datetime="${item.eventAt}"
+                                  th:text="${#temporals.format(item.eventAt, 'd MMM yyyy, HH:mm', 'Europe/Bucharest')}"></time>
+                        </p>
+                        <h2><a th:href="@{${item.target.url}}" th:text="${item.target.title}"></a></h2>
+                        <p class="feed-excerpt" th:if="${item.target.excerpt != null}" th:text="${item.target.excerpt}"></p>
+                    </article>
+                </li>
+            </ol>
+            <nav class="feed-pages" aria-label="Feed pages" th:if="${feed.totalPages > 1 and feed.page < feed.totalPages}">
+                <a th:if="${feed.page > 0}" th:href="@{/feed(page=${feed.page - 1})}">Previous</a>
+                <span th:text="'Page ' + ${feed.page + 1} + ' of ' + ${feed.totalPages}"></span>
+                <a th:if="${feed.page + 1 < feed.totalPages}" th:href="@{/feed(page=${feed.page + 1})}">Next</a>
+            </nav>
+        </th:block>
+    </div>
+</main>
+<div th:replace="~{fragments/shell :: footer}"></div>
+</body>
+</html>

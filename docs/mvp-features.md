@@ -40,7 +40,7 @@ Website workflows and JSON operations are documented in [Collections](collection
 
 People can find users by username or display name and view public profiles. A registered user can follow or unfollow others, read a paginated feed of followed users' new reviews and currently public collection publications, like or unlike reviews, and write or delete their own review comments. Counts, authorship, and timestamps reflect stored data. Private or deleted content is absent from the feed.
 
-Website workflows and JSON operations are documented in [People and follows](people.md) and [Reviews and community ratings](reviews.md#likes-and-comments).
+Website workflows and JSON operations are documented in [People and follows](people.md), [Activity feed](feed.md), and [Reviews and community ratings](reviews.md#likes-and-comments).
 
 **Business requirements:** BR-11, BR-12, BR-13, BR-14, BR-17, BR-18, BR-19, BR-20.
 
