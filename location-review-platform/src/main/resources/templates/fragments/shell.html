@@ -8,6 +8,7 @@
         <nav id="site-nav" aria-label="Main navigation">
             <a th:href="@{/}">Home</a>
             <a th:href="@{/explore}">Explore</a>
+            <a th:href="@{/collections}">Collections</a>
             <a th:href="@{/swagger-ui.html}">API documentation</a>
             <a th:if="${viewerId == null}" th:href="@{/login}">Log in</a>
             <a th:if="${viewerId == null}" th:href="@{/register}">Register</a>

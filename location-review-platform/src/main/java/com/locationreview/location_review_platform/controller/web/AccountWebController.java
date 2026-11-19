@@ -14,7 +14,8 @@ import org.springframework.web.server.ResponseStatusException;
 public class AccountWebController {
     private final AccountService accounts;
     private final ReviewService reviews;
-    public AccountWebController(AccountService accounts, ReviewService reviews) { this.accounts = accounts; this.reviews = reviews; }
+    private final CollectionService collections;
+    public AccountWebController(AccountService accounts, ReviewService reviews, CollectionService collections) { this.accounts = accounts; this.reviews = reviews; this.collections = collections; }
     @GetMapping("/login") String login() { return "account/login"; }
     @GetMapping("/register") String register(Model model) { model.addAttribute("values", new RegisterRequest("", "", "", "")); return "account/register"; }
     @PostMapping("/register") String registerSubmit(@ModelAttribute RegisterRequest values, Model model, HttpServletRequest request, HttpServletResponse response) {
@@ -28,8 +29,8 @@ public class AccountWebController {
         try { accounts.update(Long.parseLong(principal.getName()), values); return "redirect:/settings/profile?saved"; }
         catch (AccountException ex) { model.addAttribute("values", values); model.addAttribute("errors", ex.fieldErrors()); model.addAttribute("message", ex.getMessage()); response.setStatus(ex.status().value()); return "account/settings"; }
     }
-    @GetMapping("/users/{id}") String profile(@PathVariable long id, Principal principal, @RequestParam(defaultValue="0") int page, Model model) {
-        try { model.addAttribute("reviews", reviews.forUser(id, page, 20)); model.addAttribute("profile", accounts.publicProfile(id)); model.addAttribute("owner", principal != null && principal.getName().equals(Long.toString(id))); return "account/profile"; }
+    @GetMapping("/users/{id}") String profile(@PathVariable long id, Principal principal, @RequestParam(defaultValue="0") int page, @RequestParam(defaultValue="0") int collectionPage, Model model) {
+        try { model.addAttribute("collections", collections.byUser(id, collectionPage, 20)); model.addAttribute("reviews", reviews.forUser(id, page, 20)); model.addAttribute("profile", accounts.publicProfile(id)); model.addAttribute("owner", principal != null && principal.getName().equals(Long.toString(id))); return "account/profile"; }
         catch (AccountException ex) { throw new ResponseStatusException(ex.status(), ex.getMessage()); }
     }
 }

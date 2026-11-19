@@ -1,0 +1,7 @@
+<!doctype html><html lang="en" xmlns:th="http://www.thymeleaf.org"><body>
+<div th:fragment="preview(collection, owned)">
+<p class="eyebrow" th:if="${owned}" th:text="${collection.visibility}"></p>
+<h2><a th:href="@{/collections/{id}(id=${collection.id})}" th:text="${collection.title}"></a></h2>
+<p th:text="${collection.description}"></p><p>By <a th:href="@{/users/{id}(id=${collection.owner.id})}" th:text="${collection.owner.displayName}"></a></p>
+<ol th:if="${!#lists.isEmpty(collection.previewPlaces)}"><li th:each="place : ${collection.previewPlaces}"><a th:href="@{/places/{id}(id=${place.id})}" th:text="${place.name != null} ? ${place.name} : 'View place'"></a></li></ol>
+</div></body></html>

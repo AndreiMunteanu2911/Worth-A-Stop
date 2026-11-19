@@ -14,6 +14,10 @@ async function render(place) {
   contact.hidden=!contact.childNodes.length;
   for(const day of place.openingHours || []){const item=document.createElement("li");item.textContent=day;hours.append(item);}hours.hidden=!hours.childNodes.length;
   button.hidden=Boolean(place.id)||main.dataset.signedIn!=="true"||place.metadataUnavailable;
+  const collectionLink=document.querySelector("#collection-action");
+  collectionLink.hidden=!place.id;
+  collectionLink.href=main.dataset.signedIn==="true"?`/collections?scope=mine&placeId=${place.id}`:"/login";
+  collectionLink.textContent=main.dataset.signedIn==="true"?"Add to a collection":"Log in to collect this place";
   showAttributions(document.querySelector("#attributions"),[place]);
   if(!place.googlePlaceId){const attribution=document.querySelector("#attributions");attribution.replaceChildren();const link=document.createElement("a");link.href="https://www.openstreetmap.org/copyright";link.textContent="Legacy location data © OpenStreetMap contributors";attribution.append(link);}
   if(!map && place.latitude!=null && place.longitude!=null) {

@@ -20,7 +20,7 @@ public class CollectionService {
     private final UserRepository users;
     public record Owner(long id, String username, String displayName) {}
     public record PlaceItem(long id, String name, String googlePlaceId, int position) {}
-    public record Summary(long id, Owner owner, String title, String description, Visibility visibility, Instant publishedAt, Instant createdAt, Instant updatedAt) {}
+    public record Summary(long id, Owner owner, String title, String description, Visibility visibility, Instant publishedAt, Instant createdAt, Instant updatedAt, List<PlaceItem> previewPlaces) {}
     public record View(long id, Owner owner, String title, String description, Visibility visibility, Instant publishedAt, Instant createdAt, Instant updatedAt, List<PlaceItem> places) {}
     public record Input(String title, String description, Visibility visibility) {}
     public CollectionService(CollectionRepository collections, CollectionPlaceRepository members, PlaceRepository places, UserRepository users) { this.collections=collections; this.members=members; this.places=places; this.users=users; }
@@ -28,7 +28,7 @@ public class CollectionService {
     private Collection get(long id) { return collections.findById(id).orElseThrow(() -> error(HttpStatus.NOT_FOUND,"collection_not_found","Collection not found.")); }
     private Collection lock(long id) { return collections.lockById(id).orElseThrow(() -> error(HttpStatus.NOT_FOUND,"collection_not_found","Collection not found.")); }
     private void visible(Collection c, Long viewer) { if(c.getVisibility()==Visibility.PRIVATE && !Objects.equals(c.getOwner().getId(),viewer)) throw error(HttpStatus.NOT_FOUND,"collection_not_found","Collection not found."); }
-    private void owner(Collection c,long viewer) { if(!c.getOwner().getId().equals(viewer)) throw error(HttpStatus.FORBIDDEN,"forbidden","Only the owner can change this collection."); }
+    private void owner(Collection c,long viewer) { visible(c,viewer); if(!c.getOwner().getId().equals(viewer)) throw error(HttpStatus.FORBIDDEN,"forbidden","Only the owner can change this collection."); }
     private void validate(Input input) {
         Map<String,String> errors=new LinkedHashMap<>();
         if(input.title()==null || input.title().trim().isEmpty() || input.title().trim().length()>100) errors.put("title","Title must contain 1 to 100 characters.");
@@ -36,15 +36,27 @@ public class CollectionService {
         if(input.visibility()==null) errors.put("visibility","Choose public or private.");
         if(!errors.isEmpty()) throw new AccountException(HttpStatus.BAD_REQUEST,"invalid_fields","Check the collection fields.",errors);
     }
-    private Summary summary(Collection c) { var u=c.getOwner(); return new Summary(c.getId(),new Owner(u.getId(),u.getUsername(),u.getDisplayName()),c.getTitle(),c.getDescription(),c.getVisibility(),c.getPublishedAt(),c.getCreatedAt(),c.getUpdatedAt()); }
-    private View view(Collection c) { var s=summary(c); var items=members.findByCollectionIdOrderByPositionAsc(c.getId()).stream().map(m -> new PlaceItem(m.getPlace().getId(),m.getPlace().getName(),m.getPlace().getGooglePlaceId(),m.getPosition())).toList(); return new View(s.id(),s.owner(),s.title(),s.description(),s.visibility(),s.publishedAt(),s.createdAt(),s.updatedAt(),items); }
+    private Summary summary(Collection c, List<PlaceItem> preview) { var u=c.getOwner(); return new Summary(c.getId(),new Owner(u.getId(),u.getUsername(),u.getDisplayName()),c.getTitle(),c.getDescription(),c.getVisibility(),c.getPublishedAt(),c.getCreatedAt(),c.getUpdatedAt(),preview); }
+    private View view(Collection c) { var s=summary(c,List.of()); var items=members.findByCollectionIdOrderByPositionAsc(c.getId()).stream().map(m -> new PlaceItem(m.getPlace().getId(),m.getPlace().getName(),m.getPlace().getGooglePlaceId(),m.getPosition())).toList(); return new View(s.id(),s.owner(),s.title(),s.description(),s.visibility(),s.publishedAt(),s.createdAt(),s.updatedAt(),items); }
+    private PageResponse<Summary> summaries(Page<Collection> page) {
+        Map<Long,List<PlaceItem>> previews = new HashMap<>();
+        if (!page.isEmpty()) {
+            var ids = page.getContent().stream().map(Collection::getId).toList();
+            for (var member : members.findByCollectionIdInAndPositionLessThanOrderByPositionAsc(ids, 3)) {
+                var place = member.getPlace();
+                previews.computeIfAbsent(member.getCollection().getId(), ignored -> new ArrayList<>())
+                        .add(new PlaceItem(place.getId(), place.getName(), place.getGooglePlaceId(), member.getPosition()));
+            }
+        }
+        return PageResponse.from(page.map(c -> summary(c, previews.getOrDefault(c.getId(), List.of()))));
+    }
     private Pageable pageable(int page,int size,String property) { if(page<0 || page>10000 || size<1 || size>50) throw error(HttpStatus.BAD_REQUEST,"invalid_page","Invalid page or size."); return PageRequest.of(page,size,Sort.by(Sort.Order.desc(property),Sort.Order.desc("id"))); }
     @Transactional(readOnly=true) public PageResponse<Summary> list(String scope, Long viewer,int page,int size) {
-        if("public".equals(scope)) return PageResponse.from(collections.findByVisibility(Visibility.PUBLIC,pageable(page,size,"publishedAt")).map(this::summary));
-        if("mine".equals(scope)) { if(viewer==null) throw error(HttpStatus.UNAUTHORIZED,"authentication_required","Authentication is required."); return PageResponse.from(collections.findByOwnerId(viewer,pageable(page,size,"updatedAt")).map(this::summary)); }
+        if("public".equals(scope)) return summaries(collections.findByVisibility(Visibility.PUBLIC,pageable(page,size,"publishedAt")));
+        if("mine".equals(scope)) { if(viewer==null) throw error(HttpStatus.UNAUTHORIZED,"authentication_required","Authentication is required."); return summaries(collections.findByOwnerId(viewer,pageable(page,size,"updatedAt"))); }
         throw error(HttpStatus.BAD_REQUEST,"invalid_scope","Invalid collection scope.");
     }
-    @Transactional(readOnly=true) public PageResponse<Summary> byUser(long id,int page,int size) { if(!users.existsById(id)) throw error(HttpStatus.NOT_FOUND,"user_not_found","User not found."); return PageResponse.from(collections.findByOwnerIdAndVisibility(id,Visibility.PUBLIC,pageable(page,size,"publishedAt")).map(this::summary)); }
+    @Transactional(readOnly=true) public PageResponse<Summary> byUser(long id,int page,int size) { if(!users.existsById(id)) throw error(HttpStatus.NOT_FOUND,"user_not_found","User not found."); return summaries(collections.findByOwnerIdAndVisibility(id,Visibility.PUBLIC,pageable(page,size,"publishedAt"))); }
     @Transactional(readOnly=true) public View read(long id,Long viewer) { var c=get(id); visible(c,viewer); return view(c); }
     @Transactional public View create(long ownerId,Input input) {
         validate(input); var user=users.findById(ownerId).orElseThrow(() -> error(HttpStatus.NOT_FOUND,"user_not_found","User not found."));
@@ -55,14 +67,24 @@ public class CollectionService {
         if(c.getVisibility()!=input.visibility()) c.setPublishedAt(input.visibility()==Visibility.PUBLIC?Instant.now():null);
         c.setVisibility(input.visibility()); c.setUpdatedAt(Instant.now()); return view(c);
     }
+    @Transactional public View patch(long id,long viewer,Map<String,Object> fields) {
+        var c=lock(id); owner(c,viewer);
+        if(fields.isEmpty() || !Set.of("title","description","visibility").containsAll(fields.keySet())) throw error(HttpStatus.BAD_REQUEST,"invalid_fields","Supply at least one valid field.");
+        Object title=fields.getOrDefault("title",c.getTitle()), description=fields.getOrDefault("description",c.getDescription()), visibility=fields.getOrDefault("visibility",c.getVisibility().name());
+        if(!(title instanceof String) || (description!=null && !(description instanceof String)) || !(visibility instanceof String)) throw error(HttpStatus.BAD_REQUEST,"invalid_fields","Invalid collection fields.");
+        Visibility v; try { v=Visibility.valueOf((String)visibility); } catch(IllegalArgumentException e) { throw error(HttpStatus.BAD_REQUEST,"invalid_fields","Invalid visibility."); }
+        Input input=new Input((String)title,(String)description,v); validate(input); c.setTitle(input.title().trim()); c.setDescription(input.description()==null?"":input.description().trim());
+        if(c.getVisibility()!=v) c.setPublishedAt(v==Visibility.PUBLIC?Instant.now():null); c.setVisibility(v); c.setUpdatedAt(Instant.now()); return view(c);
+    }
     @Transactional public void delete(long id,long viewer) { var c=lock(id); owner(c,viewer); collections.delete(c); collections.flush(); }
     @Transactional public View add(long id,long viewer,long placeId) {
+        if(placeId<=0) throw error(HttpStatus.BAD_REQUEST,"invalid_place","Place ID must be positive.");
         var c=lock(id); owner(c,viewer); var place=places.findById(placeId).orElseThrow(() -> error(HttpStatus.NOT_FOUND,"place_not_found","Place not found.")); var current=members.findByCollectionIdOrderByPositionAsc(id);
         if(current.size()>=100 || current.stream().anyMatch(m->m.getPlace().getId().equals(placeId))) throw error(HttpStatus.CONFLICT,"collection_conflict","Place is already present or the collection is full.");
         var m=new CollectionPlace(); m.setCollection(c); m.setPlace(place); m.setPosition(current.size()); m.setAddedAt(Instant.now()); members.saveAndFlush(m); c.setUpdatedAt(Instant.now()); return view(c);
     }
     @Transactional public View reorder(long id,long viewer,List<Long> ids) {
-        var c=lock(id); owner(c,viewer); if(ids==null || ids.size()>100 || ids.stream().anyMatch(Objects::isNull)) throw error(HttpStatus.BAD_REQUEST,"invalid_order","Invalid place order.");
+        var c=lock(id); owner(c,viewer); if(ids==null || ids.size()>100 || ids.stream().anyMatch(value -> value == null || value <= 0)) throw error(HttpStatus.BAD_REQUEST,"invalid_order","Invalid place order.");
         var current=members.findByCollectionIdOrderByPositionAsc(id); var existing=current.stream().map(m->m.getPlace().getId()).toList();
         if(ids.size()!=existing.size() || new HashSet<>(ids).size()!=ids.size() || !new HashSet<>(ids).equals(new HashSet<>(existing))) throw error(HttpStatus.CONFLICT,"stale_order","Place order does not match the current collection.");
         reorderMembers(current,ids); c.setUpdatedAt(Instant.now()); return view(c);

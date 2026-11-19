@@ -1,6 +1,6 @@
 # Accounts and profiles
 
-Visitors can register at `/register` and sign in at `/login` with a username or email. Registration signs the user in. Sign-out uses the navigation's POST form. Authenticated users can edit their own profile at `/settings/profile`; `/users/{id}` displays a public profile. Public profiles show paginated reviews; collections remain a placeholder.
+Visitors can register at `/register` and sign in at `/login` with a username or email. Registration signs the user in. Sign-out uses the navigation's POST form. Authenticated users can edit their own profile at `/settings/profile`; `/users/{id}` displays a public profile. Public profiles show independently paginated reviews and public collections. Private collections are accessible through the owner's collection list. See [Collections](collections.md).
 
 Usernames are trimmed and lowercased and must contain 3–30 ASCII letters, digits or underscores. Emails are trimmed, lowercased, validated and limited to 254 characters. Display names are required and limited to 80 characters; biographies are optional and limited to 500 characters. Passwords must be 12–72 UTF-8 bytes and are stored using BCrypt. Username and email are unique. Public profiles do not expose email or password hashes.
 

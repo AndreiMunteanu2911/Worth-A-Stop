@@ -2,7 +2,7 @@
 .header-inner { min-height: 80px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .wordmark { font-weight: 700; letter-spacing: -.03em; text-decoration: none; font-size: 1.15rem; }
 .wordmark span { color: var(--color-primary-hover); margin-left: .25em; }
-#site-nav { display: flex; gap: 32px; align-items: center; }
+#site-nav { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; }
 #site-nav a { text-decoration: none; padding-block: 12px; }
 #site-nav a:hover, #site-nav a:focus-visible { text-decoration: underline; }
 #site-nav [aria-current="page"] { border-bottom: 2px solid var(--color-primary); }

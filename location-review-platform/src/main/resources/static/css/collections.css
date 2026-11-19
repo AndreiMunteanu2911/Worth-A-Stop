@@ -1,0 +1,15 @@
+.collections-main { max-width: 960px; }
+.collection-preview { border-top: 1px solid var(--color-border); padding-block: 24px 32px; }
+.collection-preview h2 { font-family: var(--font-display, Georgia, serif); font-weight: 400; overflow-wrap: anywhere; }
+.collection-description, .collection-preview p { max-width: 68ch; white-space: pre-wrap; overflow-wrap: anywhere; }
+.collection-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 24px; margin-block: 24px; }
+.collection-actions form { margin: 0; }
+.collections-main button, .collections-main select { min-height: 44px; padding: 8px 12px; font: inherit; color: var(--color-text); background: var(--color-surface); border: 1px solid var(--color-control-border); border-radius: var(--radius-control); }
+.collections-main button { cursor: pointer; }
+.collections-main button:disabled { opacity: .5; cursor: default; }
+.collections-main .account-form button { background: var(--color-primary); color: var(--color-surface); }
+.collection-places { padding-left: 32px; }
+.collection-places li { border-top: 1px solid var(--color-border); padding: 24px 0 8px 12px; }
+.collection-places li a { overflow-wrap: anywhere; }
+.collections-main h1 { overflow-wrap: anywhere; }
+@media (max-width: 767px) { .collection-actions { gap: 8px 16px; } }

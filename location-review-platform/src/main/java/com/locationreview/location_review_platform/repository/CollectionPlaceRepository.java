@@ -7,5 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CollectionPlaceRepository extends JpaRepository<CollectionPlace, Long> {
     @EntityGraph(attributePaths = "place")
+    List<CollectionPlace> findByCollectionIdInAndPositionLessThanOrderByPositionAsc(List<Long> collectionIds, int position);
+
+    @EntityGraph(attributePaths = "place")
     List<CollectionPlace> findByCollectionIdOrderByPositionAsc(long collectionId);
 }
