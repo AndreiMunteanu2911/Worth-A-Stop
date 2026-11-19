@@ -30,6 +30,8 @@ An authenticated user can publish one current review for a place with an integer
 
 Registered users can create public or private collections of real places, edit their title and description, add or remove places, change their order, switch visibility, and delete collections. Empty collections are valid. A separate saved-places area supports quick bookmarks without turning them into curated collections. Public collections are discoverable; private collections are visible only to their owner.
 
+Website workflows and JSON operations are documented in [Collections](collections.md) and [Saved places](bookmarks.md).
+
 **Business requirements:** BR-09, BR-10, BR-15, BR-16, BR-18, BR-19, BR-20.
 
 **Acceptance outcomes:** duplicate collection items and bookmarks do not create duplicate records; ordering survives refresh/restart; visibility changes immediately affect public discovery and feed eligibility; unauthorized reads or edits fail; collection and bookmark workflows work through website controls and REST operations.

@@ -30,6 +30,7 @@ public class SecurityConfig {
     @Bean SecurityFilterChain securityFilterChain(HttpSecurity http, ObjectMapper mapper) throws Exception {
         return http.authorizeHttpRequests(requests -> requests
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/register").permitAll()
+                .requestMatchers("/api/v1/bookmarks", "/api/v1/bookmarks/**", "/saved", "/saved/**").authenticated()
                 .requestMatchers("/api/v1/users/me", "/settings/profile", "/reviews/new", "/reviews/*/edit", "/reviews/*/delete", "/collections/new", "/collections/*/edit", "/collections/*/delete", "/collections/*/places/**").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
                 .requestMatchers("/api/v1/**").authenticated().anyRequest().permitAll())

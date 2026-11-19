@@ -5,7 +5,7 @@ import java.net.URI;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-@RestControllerAdvice(assignableTypes = {AccountApiController.class, ReviewApiController.class, CollectionApiController.class})
+@RestControllerAdvice(assignableTypes = {AccountApiController.class, ReviewApiController.class, CollectionApiController.class, BookmarkApiController.class})
 public class AccountErrors {
     @ExceptionHandler(AccountException.class)
     ProblemDetail account(AccountException exception, jakarta.servlet.http.HttpServletRequest request) {

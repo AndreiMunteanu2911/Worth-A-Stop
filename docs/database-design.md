@@ -33,7 +33,9 @@ erDiagram
   USER ||--o{ FOLLOW : followed
 ```
 
-Accounts use the users table for registration, authentication and profile editing. Place discovery, review and collection workflows are implemented; bookmark and social workflows remain to be implemented.
+Accounts use the users table for registration, authentication and profile editing. Place discovery, reviews, collections and saved places use the existing schema.
+
+Bookmarks use a unique user/place pair and the `(user_id, created_at, id)` index for newest-first pagination. A MySQL upsert preserves the original row and timestamp on repeated or concurrent saves. Removal is scoped to the signed-in user's pair. Both operations leave the underlying place and collection memberships intact. See [Saved places](bookmarks.md).
 
 ## Google identity migration
 

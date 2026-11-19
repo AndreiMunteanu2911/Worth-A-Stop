@@ -20,6 +20,8 @@ class LocationReviewPlatformApplicationTests {
 
     @org.springframework.test.context.bean.override.mockito.MockitoBean
     com.locationreview.location_review_platform.service.CollectionService collections;
+    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    com.locationreview.location_review_platform.service.BookmarkService bookmarks;
 
 	@Test
 	void contextLoads() {

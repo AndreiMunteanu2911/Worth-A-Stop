@@ -1,0 +1,28 @@
+.saved-directory { padding-block: 48px 64px; }
+.saved-list { list-style: none; max-width: 720px; padding: 0; }
+.saved-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding-block: 16px;
+    border-top: 1px solid var(--color-border);
+    overflow-wrap: anywhere;
+}
+.saved-list form { flex-shrink: 0; }
+.saved-metadata { margin: 4px 0 0; font-size: .875rem; color: var(--color-text-muted-on-paper); }
+.saved-pages { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.saved-pages a { display: inline-flex; align-items: center; min-height: 44px; }
+button.bookmark-action {
+    min-height: 44px;
+    padding: 8px 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-text);
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+button.bookmark-action.is-saved { color: var(--color-primary-hover); }
+button.bookmark-action:disabled { opacity: .65; cursor: wait; }
+.bookmark-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }

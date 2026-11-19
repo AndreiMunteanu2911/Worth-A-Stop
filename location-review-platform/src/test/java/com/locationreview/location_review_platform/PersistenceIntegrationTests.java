@@ -8,6 +8,7 @@ import java.time.Instant;
 
 import com.locationreview.location_review_platform.entity.User;
 import com.locationreview.location_review_platform.repository.UserRepository;
+import com.locationreview.location_review_platform.service.BookmarkService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +32,7 @@ class PersistenceIntegrationTests {
 
     @Autowired JdbcTemplate jdbc;
     @Autowired UserRepository users;
+    @Autowired BookmarkService bookmarks;
 
     @Test
     void migrationMappingsConstraintsAndPersistence() throws Exception {
@@ -56,12 +58,15 @@ class PersistenceIntegrationTests {
         jdbc.update("DELETE FROM reviews WHERE id=?", reviewId);
         assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM review_likes",Integer.class)).isZero();
         assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM review_comments",Integer.class)).isZero();
+        bookmarks.save(userId, placeId);
         mysql.getDockerClient().restartContainerCmd(mysql.getContainerId()).exec();
         boolean available = false;
         for (int attempt = 0; attempt < 60 && !available; attempt++) {
             Thread.sleep(1000);
             var result = mysql.execInContainer("sh", "-c",
-                    "MYSQL_PWD=\"$MYSQL_PASSWORD\" mysql -u \"$MYSQL_USER\" \"$MYSQL_DATABASE\" -N -e 'SELECT COUNT(*) FROM users'");
+                    "MYSQL_PWD=\"$MYSQL_PASSWORD\" mysql -u \"$MYSQL_USER\" \"$MYSQL_DATABASE\" -N -e "
+                            + "'SELECT COUNT(*) FROM bookmarks JOIN users ON users.id = bookmarks.user_id "
+                            + "JOIN places ON places.id = bookmarks.place_id WHERE username = \"reader\" AND osm_id = 1'");
             available = result.getExitCode() == 0 && result.getStdout().trim().equals("1");
         }
         assertThat(available).isTrue();

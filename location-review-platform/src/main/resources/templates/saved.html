@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Saved places | Location Review Platform</title>
+    <link rel="stylesheet" th:href="@{/css/tokens.css}">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/bookmarks.css}">
+    <script type="module" th:src="@{/js/shell.js}"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div th:replace="~{fragments/shell :: header}"></div>
+<main id="main" class="shell saved-directory">
+    <h1>Saved places</h1>
+    <p th:if="${notice}" th:text="${notice}" role="status"></p>
+    <div th:if="${error}">
+        <p th:text="${error}" role="alert"></p>
+        <a th:href="@{/saved}">Back to saved places</a>
+    </div>
+    <th:block th:if="${saved}">
+        <p th:if="${#lists.isEmpty(saved.items)}">You haven’t saved any places yet.
+            <a th:href="@{/explore}">Explore places</a>
+        </p>
+        <ul class="saved-list" th:unless="${#lists.isEmpty(saved.items)}">
+            <li th:each="bookmark : ${saved.items}" th:with="place=${bookmark.place}, label=${place.name ?: 'Place #' + place.id}">
+                <div>
+                    <a th:href="@{/places/{id}(id=${place.id})}" th:text="${label}"></a>
+                    <p class="saved-metadata" th:if="${place.category != null or place.address != null}">
+                        <span th:if="${place.category}" th:text="${place.category}"></span>
+                        <span th:if="${place.category != null and place.address != null}"> · </span>
+                        <span th:if="${place.address}" th:text="${place.address}"></span>
+                    </p>
+                </div>
+                <form method="post" th:action="@{/saved/{id}/remove(id=${place.id})}">
+                    <input type="hidden" name="page" th:value="${saved.page}">
+                    <button class="bookmark-action" type="submit"
+                            th:attr="aria-label='Remove ' + ${label} + ' from saved places'">Remove</button>
+                </form>
+            </li>
+        </ul>
+        <nav class="saved-pages" th:if="${saved.totalPages > 1}" aria-label="Saved place pages">
+            <a th:if="${saved.page > 0}" th:href="@{/saved(page=${saved.page - 1})}">Previous</a>
+            <span th:text="'Page ' + ${saved.page + 1} + ' of ' + ${saved.totalPages}"></span>
+            <a th:if="${saved.page + 1 < saved.totalPages}" th:href="@{/saved(page=${saved.page + 1})}">Next</a>
+        </nav>
+    </th:block>
+</main>
+<div th:replace="~{fragments/shell :: footer}"></div>
+</body>
+</html>

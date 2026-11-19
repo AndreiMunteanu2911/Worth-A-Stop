@@ -1,8 +1,63 @@
 import {loadMaps,showAttributions} from "./maps.js";
 const main=document.querySelector(".directory"),status=document.querySelector("#status"),article=document.querySelector("#place"),button=document.querySelector("#resolve");
+const bookmarkButton = document.querySelector("#bookmark");
+const bookmarkStatus = document.querySelector("#bookmark-status");
+const signedIn = main.dataset.signedIn === "true";
+let bookmarked = main.dataset.bookmarked === "true";
 let current,map;
-async function render(place) {
+
+function renderBookmark() {
+  bookmarkButton.hidden = !signedIn || (!current.id && current.metadataUnavailable);
+  bookmarkButton.textContent = bookmarked ? "Saved · Remove" : "Save place";
+  bookmarkButton.classList.toggle("is-saved", bookmarked);
+  document.querySelector("#bookmark-login").hidden = signedIn;
+}
+
+async function mutatePlace(url, method, payload) {
+  const headers = {
+    [document.querySelector('meta[name="csrf-header"]').content]: document.querySelector('meta[name="csrf-token"]').content
+  };
+  if (payload) headers["Content-Type"] = "application/json";
+  const response = await fetch(url, {method, headers, body: payload && JSON.stringify(payload)});
+  if (response.status === 204) return;
+  if (!response.ok) {
+    const problem = await response.json().catch(() => null);
+    throw new Error(problem?.detail || "The request failed. Please try again.");
+  }
+  return response.json();
+}
+
+async function resolvePlace() {
+  const place = await mutatePlace("/api/v1/places/resolve", "POST", {googlePlaceId: current.googlePlaceId});
+  render(place);
+  return place.id;
+}
+
+bookmarkButton.addEventListener("click", async () => {
+  if (bookmarkButton.disabled) return;
+  bookmarkButton.disabled = button.disabled = true;
+  bookmarkStatus.textContent = bookmarked ? "Removing saved place…" : "Saving place…";
+  try {
+    if (bookmarked) {
+      await mutatePlace(`/api/v1/bookmarks/${current.id}`, "DELETE");
+      bookmarked = false;
+    } else {
+      const placeId = current.id ?? await resolvePlace();
+      const result = await mutatePlace("/api/v1/bookmarks", "POST", {placeId});
+      bookmarked = result.saved;
+    }
+    renderBookmark();
+    bookmarkStatus.textContent = bookmarked ? "Place saved." : "Place removed from your saved list.";
+  } catch (error) {
+    bookmarkStatus.textContent = error.message || "Could not update your saved places.";
+  } finally {
+    bookmarkButton.disabled = button.disabled = false;
+  }
+});
+
+function render(place) {
   current=place; article.hidden=false;
+  renderBookmark();
   status.textContent=place.metadataUnavailable?"Place details are temporarily unavailable. Your community content is retained.":"";
   document.querySelector("#name").textContent=place.name; document.title=`${place.name} | Location Review Platform`;
   document.querySelector("#category").textContent=(place.category || "").replaceAll("_"," ");
@@ -20,19 +75,36 @@ async function render(place) {
   collectionLink.textContent=main.dataset.signedIn==="true"?"Add to a collection":"Log in to collect this place";
   showAttributions(document.querySelector("#attributions"),[place]);
   if(!place.googlePlaceId){const attribution=document.querySelector("#attributions");attribution.replaceChildren();const link=document.createElement("a");link.href="https://www.openstreetmap.org/copyright";link.textContent="Legacy location data © OpenStreetMap contributors";attribution.append(link);}
-  if(!map && place.latitude!=null && place.longitude!=null) {
-    try {const maps=await loadMaps(main.dataset.mapsKey);map=new maps.Map(document.querySelector("#map"),{center:{lat:Number(place.latitude),lng:Number(place.longitude)},zoom:15});new maps.Marker({map,position:map.getCenter(),title:place.name});}
-    catch(error){document.querySelector("#map-status").textContent=error.message;}
-  }
+  if(!map && place.latitude!=null && place.longitude!=null) renderMap(place);
   if(place.id && place.googlePlaceId)loadRecommendations(place.id);
-  if(place.id) { document.querySelector("#reviews-sort").onchange=()=>loadReviews(place.id,0); loadReviews(place.id,0); } else document.querySelector("#reviews-status").textContent="Save this place to write a review.";
+  if(place.id) { document.querySelector("#reviews-sort").onchange=()=>loadReviews(place.id,0); loadReviews(place.id,0); } else document.querySelector("#reviews-status").textContent=signedIn?"Enable reviews and collections to write a review.":"Log in to write a review.";
 }
-async function read(){try{const response=await fetch(main.dataset.api,{cache:"no-store"});const data=await response.json();if(!response.ok)throw new Error(data.detail);await render(data);}catch(error){status.textContent=error.message||"Place details are unavailable.";}}
+async function renderMap(place) {
+  try {
+    const maps = await loadMaps(main.dataset.mapsKey);
+    if (map) return;
+    map = new maps.Map(document.querySelector("#map"), {
+      center: {lat: Number(place.latitude), lng: Number(place.longitude)}, zoom: 15
+    });
+    new maps.Marker({map, position: map.getCenter(), title: place.name});
+  } catch (error) {
+    document.querySelector("#map-status").textContent = error.message;
+  }
+}
+async function read(){try{const response=await fetch(main.dataset.api,{cache:"no-store"});const data=await response.json();if(!response.ok)throw new Error(data.detail);render(data);}catch(error){status.textContent=error.message||"Place details are unavailable.";}}
 button.addEventListener("click",async()=>{
-  button.disabled=true;status.textContent="Saving place…";
-  try{const headers={"Content-Type":"application/json"};headers[document.querySelector('meta[name="csrf-header"]').content]=document.querySelector('meta[name="csrf-token"]').content;
-    const response=await fetch("/api/v1/places/resolve",{method:"POST",headers,body:JSON.stringify({googlePlaceId:current.googlePlaceId})});const data=await response.json();if(!response.ok)throw new Error(data.detail);await render(data);status.textContent="Place saved.";
-  }catch(error){status.textContent=error.message||"Could not save this place.";}finally{button.disabled=false;}
+  if (button.disabled) return;
+  button.disabled = bookmarkButton.disabled = true;
+  status.textContent = "Preparing place…";
+  try {
+    await resolvePlace();
+    document.querySelector("#collection-action").focus();
+    status.textContent = "Place ready for reviews and collections.";
+  } catch (error) {
+    status.textContent = error.message || "Could not prepare this place.";
+  } finally {
+    button.disabled = bookmarkButton.disabled = false;
+  }
 });
 async function loadRecommendations(id){
   try{const response=await fetch(`/api/v1/places/${id}/recommendations`,{cache:"no-store"});if(!response.ok)throw new Error();const places=await response.json(),list=document.querySelector("#recommendations");list.replaceChildren();

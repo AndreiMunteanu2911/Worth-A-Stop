@@ -6,7 +6,7 @@ Collections are ordered guides of up to 100 distinct, already resolved places. S
 
 Browse public guides at `/collections`. Sign in and select **My collections** to include your private guides, or **Create a collection** to start one. Collection detail shows the ordered places, with links to their current details and maps. Google place names are not retained in the database, so a link may say **View place** until its detail page retrieves current provider information.
 
-To collect a place, find it in Explore and open its detail page. If needed, select **Save place** to resolve its verified identity, then **Add to a collection** and choose one of your collections. The collection detail also accepts the numeric ID from an already resolved `/places/ID` address. Use **Move up** and **Move down** to reorder by keyboard or pointer. Removing a place compacts the remaining order. Deleting a collection asks for confirmation and keeps the underlying places and reviews.
+To collect a place, find it in Explore and open its detail page. If needed, select **Enable reviews and collections** to resolve its verified identity, then **Add to a collection** and choose one of your collections. The collection detail also accepts the numeric ID from an already resolved `/places/ID` address. Use **Move up** and **Move down** to reorder by keyboard or pointer. Removing a place compacts the remaining order. Deleting a collection asks for confirmation and keeps the underlying places and reviews.
 
 Public profiles show only public collections, even when viewed by their owner. Manage private collections through **My collections**. Review and collection pagination are independent on profiles.
 
@@ -41,4 +41,4 @@ Order replacement must contain each current place exactly once, including an emp
 
 `CollectionServiceTests` covers validation, privacy, authorization, missing targets, publication behavior and stale orders. `CollectionIntegrationTests` uses disposable MySQL 8.4 and a mocked Google client for API and HTML workflows, pagination, visibility, CSRF, ordering, concurrent additions, the 100-place boundary and deletion. Run the full Java 21 suite with `mvnw.cmd clean verify` from `location-review-platform/`.
 
-Manual browser layout, assistive technology and live Google behavior have not been verified. Automated verification does not use the developer database or named volume. Bookmarks are separate from collections and are not yet implemented.
+Manual browser layout, assistive technology and live Google behavior have not been verified. Automated verification does not use the developer database or named volume. [Saved places](bookmarks.md) are managed independently of collections.
