@@ -6,8 +6,13 @@
         <a class="wordmark" th:href="@{/}" aria-label="Location Review Platform home">Location Review<span>Platform</span></a>
         <button class="menu-toggle" type="button" aria-controls="site-nav" aria-expanded="false">Menu</button>
         <nav id="site-nav" aria-label="Main navigation">
-            <a th:href="@{/}" aria-current="page">Home</a>
+            <a th:href="@{/}">Home</a>
             <a th:href="@{/swagger-ui.html}">API documentation</a>
+            <a th:if="${viewerId == null}" th:href="@{/login}">Log in</a>
+            <a th:if="${viewerId == null}" th:href="@{/register}">Register</a>
+            <a th:if="${viewerId != null}" th:href="@{/users/{id}(id=${viewerId})}">My profile</a>
+            <a th:if="${viewerId != null}" th:href="@{/settings/profile}">Settings</a>
+            <form th:if="${viewerId != null}" method="post" th:action="@{/logout}"><button class="nav-action" type="submit">Log out</button></form>
         </nav>
     </div>
 </header>

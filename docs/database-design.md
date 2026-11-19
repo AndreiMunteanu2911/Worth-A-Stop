@@ -14,7 +14,7 @@ The application uses MySQL 8.4 and Flyway migration `V1__initial_schema.sql`. Hi
 | `follows` | Follower and followed user foreign keys, unique pair, creation time and a check prohibiting self-follow. |
 | `bookmarks` | User and place foreign keys, unique pair and creation time. |
 
-Deleting a review cascades to its likes and comments; deleting a collection cascades to its membership rows. Other relationships restrict deletion. Indexes support the owner, place, time, rating, visibility, ordering and follower access paths in the migration. Length limits and additional business rules such as dense collection ordering and validated review text belong to future service layers; they are not yet implemented as application workflows.
+Deleting a review cascades to its likes and comments; deleting a collection cascades to its membership rows. Other relationships restrict deletion. Indexes support the owner, place, time, rating, visibility, ordering and follower access paths in the migration. Additional business rules such as dense collection ordering and validated review text belong to future service layers; they are not yet implemented as application workflows.
 
 ```mermaid
 erDiagram
@@ -33,4 +33,4 @@ erDiagram
   USER ||--o{ FOLLOW : followed
 ```
 
-This schema provides persistence foundations; accounts, place discovery and other product workflows are not yet implemented.
+Accounts use the users table for registration, authentication and profile editing. Place discovery, reviews, collections and social workflows remain to be implemented.

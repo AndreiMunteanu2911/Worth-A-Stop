@@ -9,6 +9,10 @@ import org.springframework.boot.test.context.SpringBootTest;
                 + "org.springframework.boot.flyway.autoconfigure.FlywayAutoConfiguration"
 })
 class LocationReviewPlatformApplicationTests {
+    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    com.locationreview.location_review_platform.repository.UserRepository users;
+    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    com.locationreview.location_review_platform.repository.FollowRepository follows;
 
 	@Test
 	void contextLoads() {

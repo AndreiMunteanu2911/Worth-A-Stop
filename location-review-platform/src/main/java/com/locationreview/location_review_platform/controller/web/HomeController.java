@@ -10,4 +10,6 @@ public class HomeController {
     String home() {
         return "home";
     }
+    @GetMapping("/explore")
+    String explore() { return "explore-placeholder"; }
 }
