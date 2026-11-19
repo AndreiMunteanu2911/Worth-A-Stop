@@ -123,6 +123,15 @@ async function loadReviews(id,page) {
     for(const review of data.items) {
       const article=document.createElement("article"), heading=document.createElement("p"), author=document.createElement("a"),body=document.createElement("p");
       author.href=`/users/${review.author.id}`; author.textContent=review.author.displayName; heading.append(author,document.createTextNode(` · ${review.rating} / 5 · ${review.createdAt.slice(0,10)}${review.visitDate ? ` · Visited ${review.visitDate}` : ""}`)); body.textContent=review.body; article.append(heading,body);
+      article.classList.add("review-row");
+      body.classList.add("review-copy");
+      const reactions = document.createElement("div"), discussion = document.createElement("a");
+      reactions.className = "review-actions";
+      discussion.href = `/reviews/${review.id}`;
+      discussion.textContent = "Discussion";
+      const likeLabel = review.likeCount === 1 ? "1 like" : `${review.likeCount} likes`;
+      reactions.append(document.createTextNode(review.likedByMe ? `${likeLabel} · Liked` : likeLabel), discussion);
+      article.append(reactions);
       if(String(review.author.id)===main.dataset.viewerId) { const edit=document.createElement("a"); edit.href=`/reviews/${review.id}/edit`; edit.textContent="Edit review"; const form=document.createElement("form"); form.method="post"; form.action=`/reviews/${review.id}/delete`; const token=document.createElement("input"); token.type="hidden"; token.name="_csrf"; token.value=document.querySelector('meta[name="csrf-token"]').content; const remove=document.createElement("button"); remove.type="submit"; remove.textContent="Delete review"; form.append(token,remove); form.addEventListener("submit",event=>{if(!confirm("Delete your review?"))event.preventDefault();}); article.append(edit,form); }
       list.append(article);
     }

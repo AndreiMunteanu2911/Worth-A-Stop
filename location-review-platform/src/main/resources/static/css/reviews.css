@@ -1,0 +1,27 @@
+.review-reading, .review-row { max-width: 720px; }
+.review-row { border-top: 1px solid var(--color-border); padding-block: 16px; }
+.review-copy { white-space: pre-wrap; overflow-wrap: anywhere; }
+.review-reading .review-copy { font-size: 1.0625rem; line-height: 1.65; }
+.review-meta { color: var(--color-text-muted-on-paper); font-size: .875rem; }
+.review-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 0 16px; }
+.review-actions a { display: inline-flex; align-items: center; min-height: 44px; }
+.review-action {
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-text);
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.review-action.is-liked { color: var(--color-primary-hover); }
+.review-reading button:disabled { opacity: .75; cursor: default; }
+.review-comments { margin-top: 32px; border-top: 1px solid var(--color-border); }
+.review-comment-count { color: var(--color-text-muted-on-paper); margin-inline-start: 8px; font-size: 1rem; }
+.review-comment-list { padding: 0; list-style: none; }
+.review-comment-list li { border-top: 1px solid var(--color-border); padding-block: 12px; }
+.review-comment-list p { margin: 4px 0 8px; }
+.review-comment-delete summary { min-height: 44px; padding-block: 10px; cursor: pointer; }
+.review-comment-delete button { color: var(--color-error); }
+.review-feedback { border-left: 2px solid var(--color-success); padding-left: 12px; }

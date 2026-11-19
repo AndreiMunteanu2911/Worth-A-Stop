@@ -1,12 +1,15 @@
 package com.locationreview.location_review_platform.repository;
 
 import com.locationreview.location_review_platform.entity.Review;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
+import java.util.Optional;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.repository.query.Param;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
@@ -15,6 +18,10 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @EntityGraph(attributePaths = {"author", "place"})
     Page<Review> findByAuthorId(long authorId, Pageable pageable);
     boolean existsByAuthorIdAndPlaceId(long authorId, long placeId);
+
+    @Lock(LockModeType.PESSIMISTIC_READ)
+    @Query("select r from Review r where r.id = :id")
+    Optional<Review> findForInteraction(long id);
     interface RatingBucket { Byte getRating(); Long getCount(); }
     @Query("select r.rating as rating, count(r) as count from Review r where r.place.id = :placeId group by r.rating")
     List<RatingBucket> distribution(@Param("placeId") long placeId);

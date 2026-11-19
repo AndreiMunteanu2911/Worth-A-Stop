@@ -27,6 +27,8 @@ class FoundationWebTests {
     com.locationreview.location_review_platform.service.PlaceService places;
     @org.springframework.test.context.bean.override.mockito.MockitoBean
     com.locationreview.location_review_platform.service.ReviewService reviews;
+    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    com.locationreview.location_review_platform.service.ReviewInteractionService reviewInteractions;
 
     @org.springframework.test.context.bean.override.mockito.MockitoBean
     com.locationreview.location_review_platform.service.CollectionService collections;

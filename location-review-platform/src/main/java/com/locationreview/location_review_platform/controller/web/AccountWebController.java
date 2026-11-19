@@ -38,13 +38,13 @@ public class AccountWebController {
     }
     @GetMapping("/users/{id}") String profile(@PathVariable long id, Principal principal, @RequestParam(defaultValue="0") int page, @RequestParam(defaultValue="0") int collectionPage, Model model) {
         try {
-            boolean owner = principal != null && principal.getName().equals(Long.toString(id));
+            Long viewerId = principal == null ? null : Long.valueOf(principal.getName());
+            boolean owner = viewerId != null && viewerId == id;
             model.addAttribute("profile", accounts.publicProfile(id));
             model.addAttribute("collections", collections.byUser(id, collectionPage, 20));
-            model.addAttribute("reviews", reviews.forUser(id, page, 20));
+            model.addAttribute("reviews", reviews.forUser(id, page, 20, viewerId));
             model.addAttribute("owner", owner);
-            model.addAttribute("following", principal != null && !owner
-                    && people.isFollowing(Long.parseLong(principal.getName()), id));
+            model.addAttribute("following", viewerId != null && !owner && people.isFollowing(viewerId, id));
             return "account/profile";
         }
         catch (AccountException ex) { throw new ResponseStatusException(ex.status(), ex.getMessage()); }
