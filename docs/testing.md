@@ -1,6 +1,6 @@
 # Testing
 
-Run from `location-review-platform/` with a Java 21 JDK and Docker Desktop running. Set `JAVA_HOME` to Java 21 when multiple JDKs are installed.
+Run from the repository root with a Java 21 JDK and Docker Desktop running. Set `JAVA_HOME` to Java 21 when multiple JDKs are installed.
 
 ```powershell
 .\mvnw.cmd -q clean verify
@@ -19,7 +19,7 @@ Automated tests cover account, discovery, review, collection, bookmark, and soci
 
 ## Local sample data
 
-Start the app once so Flyway initializes the database, then run this command in a second PowerShell window from `location-review-platform/`.
+Start the app once so Flyway initializes the database, then run this command in a second PowerShell window from the repository root.
 
 ```powershell
 .\seed-sample-data.ps1

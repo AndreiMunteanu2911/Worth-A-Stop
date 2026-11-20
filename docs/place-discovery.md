@@ -13,9 +13,13 @@ GOOGLE_MAPS_BROWSER_API_KEY=
 
 `run.ps1` loads these names along with the existing MySQL credentials. Spring Boot launched directly from an IDE needs the same environment variables. The browser key is sent to discovery pages for Maps JavaScript API; restrict it to the application's website origins. The server key stays on the backend and is sent to Places API in an HTTP header. Restrict it to Places API (New) and the server's public IP. The application does not read keys from source files. Existing `.env` credentials are preserved.
 
+For place photos, enable [Places UI Kit](https://console.cloud.google.com/apis/library/placewidgets.googleapis.com) in the same billed Cloud project. Under **APIs & Services → Credentials**, edit the browser key and allow both **Maps JavaScript API** and **Places UI Kit** under **API restrictions**. Keep the browser key's website restrictions in place.
+
 ## Routes and behavior
 
 Home and Explore both support text search. Explore renders the result list and its attribution when JavaScript is disabled. With JavaScript enabled, Explore updates the list without a full page load and keeps the previous results if the provider fails. On a narrow screen, use **List** and **Map** to switch views. When the map is available, focusing a place link or selecting its pin highlights the same result.
+
+Google place pages can show photos with a lightbox. Selecting a pin on the Explore map opens a popup with a thumbnail when available and a link to the place page. Places UI Kit renders the media and its attribution using the Google place ID. The photo widget is optional and the place link remains usable if it fails.
 
 - `GET /api/v1/places/search?q=...`: 2–100 character query, optional complete south/west/north/east rectangle (at most 0.25 degrees per axis), optional lat/lon center pair, category, minimum community rating, sort and limit.
 - `GET /api/v1/places/nearby?lat=...&lon=...`: radius 100–5000 meters; default 1500; maximum 20 candidates.

@@ -39,6 +39,6 @@ Order replacement must contain each current place exactly once, including an emp
 
 ## Automated verification
 
-`CollectionServiceTests` covers validation, privacy, authorization, missing targets, publication behavior and stale orders. `CollectionIntegrationTests` uses disposable MySQL 8.4 and a mocked Google client for API and HTML workflows, pagination, visibility, CSRF, ordering, concurrent additions, the 100-place boundary and deletion. Run the full Java 21 suite with `mvnw.cmd clean verify` from `location-review-platform/`.
+`CollectionServiceTests` covers validation, privacy, authorization, missing targets, publication behavior and stale orders. `CollectionIntegrationTests` uses disposable MySQL 8.4 and a mocked Google client for API and HTML workflows, pagination, visibility, CSRF, ordering, concurrent additions, the 100-place boundary and deletion. Run the full Java 21 suite with `mvnw.cmd clean verify` from the repository root.
 
 Manual browser layout, assistive technology and live Google behavior have not been verified. Automated verification does not use the developer database or named volume. [Saved places](bookmarks.md) are managed independently of collections.

@@ -1,4 +1,4 @@
-# Five main MVP features — Location Review Platform
+# Five main MVP features — Worth a Stop
 
 **Document status:** approved intended MVP scope. This is a requirements document; it does not claim that the application is already implemented. These five areas derive from [the business requirements](business-requirements.md) and together describe the complete first product release. Each area includes a graphical interface and corresponding REST functionality.
 

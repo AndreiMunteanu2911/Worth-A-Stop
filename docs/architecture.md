@@ -1,6 +1,6 @@
 # Architecture
 
-Location Review Platform is a modular Spring Boot application. The server renders Thymeleaf pages; the discovery and place pages enhance those views with JavaScript. REST endpoints are under `/api/v1`.
+Worth a Stop is a modular Spring Boot application. The server renders Thymeleaf pages; the discovery and place pages enhance those views with JavaScript. REST endpoints are under `/api/v1`.
 
 ```mermaid
 flowchart LR

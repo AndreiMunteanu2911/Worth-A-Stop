@@ -1,10 +1,10 @@
-# Business requirements — Location Review Platform
+# Business requirements — Worth a Stop
 
 **Document status:** approved requirements baseline; application implementation and verification are separate. These requirements describe the intended system and do not assert that the features are already available.
 
 ## System definition
 
-Location Review Platform is a consumer web application for discovering real places and sharing locally authored ratings, reviews, curated collections, bookmarks, and social activity. Google Places supplies new discovery results and Google Maps displays them. Guests may discover places and public content. Registered users can publish and manage their own content. The platform's ratings come exclusively from its own reviews.
+Worth a Stop is a consumer web application for discovering real places and sharing locally authored ratings, reviews, curated collections, bookmarks, and social activity. Google Places supplies new discovery results and Google Maps displays them. Guests may discover places and public content. Registered users can publish and manage their own content. The platform's ratings come exclusively from its own reviews.
 
 Each requirement below has a stable identifier, an MVP feature mapping, and observable acceptance criteria. The five feature descriptions are in [MVP features](mvp-features.md). `All` denotes a requirement applying across all five features.
 
