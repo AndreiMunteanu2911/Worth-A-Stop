@@ -18,11 +18,6 @@ public class BookmarkWebController {
         this.bookmarks = bookmarks;
     }
 
-    @ModelAttribute("savedPage")
-    boolean savedPage() {
-        return true;
-    }
-
     @GetMapping
     String list(Principal principal, @RequestParam(defaultValue = "0") int page, Model model,
             RedirectAttributes redirect) {

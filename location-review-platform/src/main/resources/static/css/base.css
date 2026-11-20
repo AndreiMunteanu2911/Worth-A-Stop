@@ -5,6 +5,8 @@ a { color: inherit; }
 a:hover { text-decoration-thickness: 2px; }
 :focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
 .shell { width: min(100% - 64px, 1280px); margin-inline: auto; }
+[hidden] { display: none !important; }
 .skip-link { position: absolute; top: -100px; left: 16px; background: var(--color-surface); padding: 8px; z-index: 10; }
 .skip-link:focus { top: 8px; }
+@media (max-width: 1023px) { .shell { width: min(100% - 48px, 1280px); } }
 @media (max-width: 767px) { .shell { width: min(100% - 32px, 1280px); } }

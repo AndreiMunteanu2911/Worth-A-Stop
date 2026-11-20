@@ -13,8 +13,8 @@
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 <div th:replace="~{fragments/shell :: header}"></div>
-<main id="main" class="shell saved-directory">
-    <h1>Saved places</h1>
+<main id="main" tabindex="-1" class="shell saved-directory">
+    <h1 class="section-title">Saved places</h1>
     <p th:if="${notice}" th:text="${notice}" role="status"></p>
     <div th:if="${error}">
         <p th:text="${error}" role="alert"></p>
@@ -41,7 +41,7 @@
                 </form>
             </li>
         </ul>
-        <nav class="saved-pages" th:if="${saved.totalPages > 1}" aria-label="Saved place pages">
+        <nav class="pagination" th:if="${saved.totalPages > 1}" aria-label="Saved place pages">
             <a th:if="${saved.page > 0}" th:href="@{/saved(page=${saved.page - 1})}">Previous</a>
             <span th:text="'Page ' + ${saved.page + 1} + ' of ' + ${saved.totalPages}"></span>
             <a th:if="${saved.page + 1 < saved.totalPages}" th:href="@{/saved(page=${saved.page + 1})}">Next</a>

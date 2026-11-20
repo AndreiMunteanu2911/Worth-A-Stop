@@ -1,0 +1,8 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<span th:fragment="error(errors, field)" class="field-error"
+      th:if="${errors != null and errors.containsKey(field)}"
+      th:id="${field + '-error'}" th:text="${errors.get(field)}"></span>
+</body>
+</html>

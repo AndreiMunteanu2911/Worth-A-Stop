@@ -1,6 +1,6 @@
 # Saved places
 
-Sign in and select **Save place** on a place detail page. For a new Google result, the app verifies and resolves the Google place before adding the bookmark. **Saved · Remove** removes it from your list. To use a remote place for reviews and collections without bookmarking it, select **Enable reviews and collections**.
+Sign in and select **Save place** on a place detail page. For a new Google result, the app verifies the place before adding the bookmark. **Saved · Remove** removes it from your list. Writing a review or adding a place to a collection works independently of bookmarks.
 
 Open **Saved** in the navigation to see your private list, newest first. Each entry opens its place details and has a **Remove** button. Removing a bookmark leaves the place, reviews and collection memberships intact. Saving a place again while it is already saved keeps its original position in the list.
 

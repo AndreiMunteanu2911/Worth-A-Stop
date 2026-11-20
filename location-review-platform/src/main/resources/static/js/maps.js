@@ -2,11 +2,13 @@ let loading;
 export function loadMaps(key) {
   if (!key) return Promise.reject(new Error("The map is not configured. The place list remains available."));
   if (!loading) loading = new Promise((resolve,reject) => {
-    window.locationReviewMapsReady = () => resolve(window.google.maps);
-    window.gm_authFailure = () => reject(new Error("The map could not be authorized."));
+    const fail = message => { clearTimeout(timeout); reject(new Error(message)); };
+    const timeout = setTimeout(() => fail("The map did not load. The place list remains available."), 12000);
+    window.locationReviewMapsReady = () => { clearTimeout(timeout); resolve(window.google.maps); };
+    window.gm_authFailure = () => fail("The map could not be authorized.");
     const script=document.createElement("script");
     script.src=`https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&loading=async&callback=locationReviewMapsReady&v=weekly`;
-    script.async=true; script.onerror=()=>reject(new Error("The map could not be loaded.")); document.head.append(script);
+    script.async=true; script.onerror=()=>fail("The map could not be loaded."); document.head.append(script);
   });
   return loading;
 }

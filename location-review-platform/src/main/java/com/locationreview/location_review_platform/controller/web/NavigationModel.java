@@ -1,5 +1,6 @@
 package com.locationreview.location_review_platform.controller.web;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -8,4 +9,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 public class NavigationModel {
     @ModelAttribute("viewerId")
     public String viewerId(Principal principal) { return principal == null ? null : principal.getName(); }
+
+    @ModelAttribute("navigationPath")
+    public String navigationPath(HttpServletRequest request) {
+        return request.getServletPath().isEmpty()
+                ? request.getRequestURI().substring(request.getContextPath().length())
+                : request.getServletPath();
+    }
 }

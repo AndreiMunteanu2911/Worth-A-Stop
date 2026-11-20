@@ -1,8 +1,7 @@
- .account-main { padding-block: 48px 80px; min-height: 60vh; }
-.account-main h1 { font-family: Georgia, serif; font-size: clamp(2.25rem, 4vw, 3.5rem); line-height: 1.08; font-weight: 400; margin: 0 0 24px; }
+.account-main { padding-block: 48px 80px; min-height: 60vh; }
 .account-form { max-width: 480px; }
 .account-form label { display: block; font-weight: 600; font-size: 14px; margin: 20px 0 8px; }
-.account-form input, .account-form textarea { display: block; width: 100%; min-height: 48px; padding: 10px 12px; border: 1px solid var(--color-control-border); border-radius: var(--radius-control); background: var(--color-surface); color: var(--color-text); font: inherit; }
+.account-form :where(input:not([type="radio"]):not([type="hidden"]), textarea, select) { display: block; width: 100%; min-height: 48px; padding: 10px 12px; border: 1px solid var(--color-control-border); border-radius: var(--radius-control); background: var(--color-surface); color: var(--color-text); font: inherit; }
 .account-form textarea { min-height: 120px; resize: vertical; }
 .account-form button { margin-top: 24px; padding: 10px 20px; min-height: 44px; border: 1px solid var(--color-primary); border-radius: var(--radius-control); background: var(--color-primary); color: white; font: inherit; cursor: pointer; }
 .account-form button:hover { background: var(--color-primary-hover); }
@@ -13,8 +12,8 @@
 .profile-initial { display: inline-grid; place-items: center; width: 48px; height: 48px; border: 1px solid var(--color-control-border); font-weight: 700; }
 @media (max-width: 767px) { .account-main { padding-block: 32px 64px; } }
 
-.account-form fieldset { border: 0; padding: 0; margin: 24px 0; }
-.account-form fieldset label { display: inline-flex; align-items: center; gap: 4px; margin: 8px 12px 8px 0; }
+.account-form fieldset { border: 0; padding: 0; margin: 24px 0 8px; min-width: 0; }
+.account-form fieldset label { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; margin: 4px 12px 4px 0; }
 .account-form fieldset input[type="radio"] { display: inline-block; width: auto; min-height: 0; }
 
 .profile-heading {
@@ -28,7 +27,7 @@
 .profile-heading h1 { margin: 12px 0 0; }
 .profile-identity { min-width: 0; overflow-wrap: anywhere; }
 .profile-connections { display: flex; flex-wrap: wrap; gap: 16px; }
-.profile-connections a, .people-pages a { display: inline-flex; align-items: center; min-height: 44px; }
+.profile-connections a { display: inline-flex; align-items: center; min-height: 44px; }
 .profile-follow button {
     min-height: 44px;
     padding: 10px 0;
@@ -50,15 +49,8 @@
 .person-name { font-weight: 600; }
 .person-username { margin: 4px 0 0; color: var(--color-text-muted-on-paper); font-size: .875rem; }
 .person-biography { margin: 8px 0 0; white-space: pre-line; }
-.people-pages {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 16px;
-    max-width: 720px;
-    border-top: 1px solid var(--color-border);
-    padding-block: 8px;
-}
+.account-main .pagination { max-width: 720px; }
+.account-form [aria-invalid="true"]:is(input, textarea, select) { border-color: var(--color-error); }
 @media (max-width: 767px) {
     .profile-heading { flex-direction: column; gap: 0; }
 }

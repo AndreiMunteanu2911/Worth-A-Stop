@@ -13,8 +13,8 @@
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 <div th:replace="~{fragments/shell :: header}"></div>
-<main id="main" class="shell feed-main">
-    <h1>Feed</h1>
+<main id="main" tabindex="-1" class="shell feed-main">
+    <h1 class="section-title">Feed</h1>
     <div class="feed-reading">
         <div th:if="${feedError}">
             <p th:text="${feedError}" role="alert"></p>
@@ -42,7 +42,7 @@
                     </article>
                 </li>
             </ol>
-            <nav class="feed-pages" aria-label="Feed pages" th:if="${feed.totalPages > 1 and feed.page < feed.totalPages}">
+            <nav class="pagination" aria-label="Feed pages" th:if="${feed.totalPages > 1 and feed.page < feed.totalPages}">
                 <a th:if="${feed.page > 0}" th:href="@{/feed(page=${feed.page - 1})}">Previous</a>
                 <span th:text="'Page ' + ${feed.page + 1} + ' of ' + ${feed.totalPages}"></span>
                 <a th:if="${feed.page + 1 < feed.totalPages}" th:href="@{/feed(page=${feed.page + 1})}">Next</a>

@@ -17,6 +17,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Page<Review> findByPlaceId(long placeId, Pageable pageable);
     @EntityGraph(attributePaths = {"author", "place"})
     Page<Review> findByAuthorId(long authorId, Pageable pageable);
+    @EntityGraph(attributePaths = {"author", "place"})
+    List<Review> findTop3ByOrderByCreatedAtDescIdDesc();
     boolean existsByAuthorIdAndPlaceId(long authorId, long placeId);
 
     @Lock(LockModeType.PESSIMISTIC_READ)

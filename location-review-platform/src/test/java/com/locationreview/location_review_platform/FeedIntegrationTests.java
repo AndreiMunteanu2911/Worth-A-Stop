@@ -175,8 +175,13 @@ class FeedIntegrationTests {
                 .andExpect(jsonPath("$.items[1].target.excerpt").value("Updated review text"));
         mvc.perform(get("/feed").session(readerSession))
                 .andExpect(content().string(containsString("href=\"/collections/" + collection + "\"")));
+        mvc.perform(get("/"))
+                .andExpect(content().string(containsString("href=\"/reviews/" + review + "\"")))
+                .andExpect(content().string(containsString("href=\"/collections/" + collection + "\"")))
+                .andExpect(content().string(containsString("Updated review text")));
 
         change(authorSession, collectionApi, "{\"visibility\":\"PRIVATE\"}").andExpect(status().isOk());
+        mvc.perform(get("/")).andExpect(content().string(not(containsString("Public itinerary"))));
         mvc.perform(get(API).session(readerSession)).andExpect(jsonPath("$.totalElements").value(1))
                 .andExpect(content().string(not(containsString("Public itinerary"))));
         change(authorSession, collectionApi, "{\"visibility\":\"PUBLIC\"}").andExpect(status().isOk());

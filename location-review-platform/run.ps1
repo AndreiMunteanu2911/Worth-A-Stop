@@ -21,11 +21,19 @@ foreach ($name in @("MYSQL_PASSWORD", "MYSQL_ROOT_PASSWORD")) {
     }
 }
 
-$javaOutput = @(& java --version)
+$javaCommand = "java"
+if (-not [string]::IsNullOrWhiteSpace($env:JAVA_HOME)) {
+    $javaCommand = Join-Path $env:JAVA_HOME "bin\java.exe"
+    if (-not (Test-Path -LiteralPath $javaCommand -PathType Leaf)) {
+        throw "JAVA_HOME must point to a Java 21 JDK."
+    }
+}
+
+$javaOutput = @(& $javaCommand --version)
 $javaExitCode = $LASTEXITCODE
 $javaVersion = $javaOutput[0]
 if ($javaExitCode -ne 0 -or $javaVersion -notmatch '^(openjdk|java) 21([. ]|$)') {
-    throw "Java 21 must be active for Maven. Current: $javaVersion"
+    throw "Java 21 must be active for Maven. Check JAVA_HOME and PATH. Current: $javaVersion"
 }
 
 Write-Host "Starting MySQL container..." -ForegroundColor Cyan

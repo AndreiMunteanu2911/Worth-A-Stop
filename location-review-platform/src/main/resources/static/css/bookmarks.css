@@ -11,8 +11,7 @@
 }
 .saved-list form { flex-shrink: 0; }
 .saved-metadata { margin: 4px 0 0; font-size: .875rem; color: var(--color-text-muted-on-paper); }
-.saved-pages { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
-.saved-pages a { display: inline-flex; align-items: center; min-height: 44px; }
+.saved-directory .pagination { max-width: 720px; }
 button.bookmark-action {
     min-height: 44px;
     padding: 8px 0;
@@ -26,3 +25,4 @@ button.bookmark-action {
 button.bookmark-action.is-saved { color: var(--color-primary-hover); }
 button.bookmark-action:disabled { opacity: .65; cursor: wait; }
 .bookmark-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+@media (max-width: 767px) { .saved-directory { padding-block: 32px 64px; } }

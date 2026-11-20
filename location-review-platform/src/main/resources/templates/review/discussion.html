@@ -15,9 +15,9 @@
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 <div th:replace="~{fragments/shell :: header}"></div>
-<main id="main" class="shell account-main">
+<main id="main" tabindex="-1" class="shell account-main">
     <div class="review-reading">
-        <h1>Review discussion</h1>
+        <h1 class="section-title">Review discussion</h1>
         <article>
             <p class="review-meta">
                 <a th:href="@{/users/{id}(id=${review.author.id})}" th:text="${review.author.displayName}">Author</a>
@@ -54,7 +54,7 @@
                         · <time th:datetime="${comment.createdAt}" th:text="${#strings.substring(comment.createdAt.toString(), 0, 10)}"></time>
                     </p>
                     <p class="review-copy" th:text="${comment.body}"></p>
-                    <details th:if="${viewerId == comment.author.id.toString()}" class="review-comment-delete">
+                    <details th:if="${viewerId == comment.author.id.toString()}" class="delete-confirm">
                         <summary>Delete comment</summary>
                         <form method="post" th:action="@{/comments/{id}/delete(id=${comment.id})}"
                               data-review-submit="Deleting…">
@@ -64,7 +64,7 @@
                     </details>
                 </li>
             </ol>
-            <nav class="review-actions" th:if="${comments.totalPages > 1 or comments.page > 0}" aria-label="Comment pages">
+            <nav class="pagination" th:if="${comments.totalPages > 1 or comments.page > 0}" aria-label="Comment pages">
                 <a th:if="${comments.page > 0}"
                    th:href="@{/reviews/{id}#comments(id=${review.id},page=${comments.page - 1})}">Previous</a>
                 <span th:if="${comments.page < comments.totalPages}"

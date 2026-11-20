@@ -12,11 +12,11 @@ A visitor can create an account, sign in, and sign out. A registered user can ed
 
 ## MVP-02 — Real place discovery and search
 
-Visitors search actual OpenStreetMap places by name and geographic area, explore nearby places on an interactive Leaflet map, browse a coordinated result list, filter supported categories and locally available rating information, and open a place detail page. The detail page combines available location metadata with the platform's own review statistics and relevant real-place recommendations. Search results and map data display source attribution and explain missing or unavailable data.
+Visitors search Google Places by name and geographic area, explore nearby places on an interactive Google map, browse a coordinated result list, filter supported categories and available community ratings, and open a place detail page. The detail page combines available location metadata with community review statistics and relevant place recommendations. Search results and map data display source attribution and explain missing or unavailable data.
 
 **Business requirements:** BR-03, BR-04, BR-05, BR-18, BR-19, BR-20.
 
-**Acceptance outcomes:** map pan/zoom, markers, popups, list fallback, search, filters, sorting, and detail navigation work on desktop and mobile; every reviewable place is linked to a verified OSM element; repeated discovery does not create duplicate places; provider failures leave existing local content available. Search requests are bounded and comply with provider policies.
+**Acceptance outcomes:** map pan/zoom, markers, popups, list fallback, search, filters, sorting, and detail navigation work on desktop and mobile. New reviewable places link to verified Google IDs, and existing OpenStreetMap place identities remain readable. Discovery returns at most 20 candidates. Repeated resolution does not create duplicate places. Provider failures leave existing local content available.
 
 ## MVP-03 — Ratings and reviews
 
@@ -48,6 +48,4 @@ Website workflows and JSON operations are documented in [People and follows](peo
 
 ## Shared MVP quality criteria
 
-The first release is complete only when all five areas function through the GUI and documented REST API, persisted data survives restart, validation and access controls are enforced server-side, and the full build and tests pass. The interface uses a cohesive editorial design, responsive layouts, accessible controls, meaningful loading/empty/error states, and real data without fabricated places or reviews. Swagger/OpenAPI documentation must describe every custom REST endpoint. Detailed usage, API, testing, and demonstration documents will describe verified behavior when implementation is complete.
-
-Google provider revision: MVP-02 is now implemented in code against Google Places API (New) and Google Maps JavaScript. New place identities use Google IDs; existing OSM records remain readable. Nearby candidate limit is 20. The migration's execution and verification are pending; earlier OSM checks do not establish Google behavior.
+The five areas have GUI and API workflows, server-side validation and access controls, and persistent MySQL data. See [Usage](usage.md), [REST API](api.md), and [Testing](testing.md) for implementation behavior and verification limits.

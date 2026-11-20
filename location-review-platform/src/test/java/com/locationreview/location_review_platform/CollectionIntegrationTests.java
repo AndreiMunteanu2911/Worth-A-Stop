@@ -107,7 +107,10 @@ class CollectionIntegrationTests {
     @Test void pagesAndForms() throws Exception {
         mvc.perform(get("/collections/new")).andExpect(status().is3xxRedirection());
         mvc.perform(get("/collections/new").with(user(""+author))).andExpect(status().isOk());
-        mvc.perform(post("/collections/new").with(user(""+author)).with(csrf()).param("title", " ").param("visibility", "PRIVATE")).andExpect(status().isBadRequest()).andExpect(content().string(containsString("Title must contain")));
+        mvc.perform(post("/collections/new").with(user(""+author)).with(csrf()).param("title", " ").param("visibility", "PRIVATE"))
+                .andExpect(status().isBadRequest()).andExpect(content().string(containsString("Title must contain")))
+                .andExpect(content().string(containsString("aria-describedby=\"title-error\"")))
+                .andExpect(content().string(containsString("id=\"title-error\"")));
         mvc.perform(post("/collections/new").with(user(""+author)).with(csrf()).param("title", "My route").param("visibility", "PUBLIC")).andExpect(status().is3xxRedirection());
         long id = jdbc.queryForObject("select id from collections", Long.class);
         mvc.perform(get("/collections").with(user(""+author)).param("scope", "mine").param("placeId", ""+place)).andExpect(status().isOk()).andExpect(content().string(containsString("Add this place")));

@@ -71,6 +71,12 @@ class ReviewIntegrationTests {
         mvc.perform(get("/api/v1/users/99999999/reviews")).andExpect(status().isNotFound());
         mvc.perform(get("/api/v1/places/99999999/rating-summary")).andExpect(status().isNotFound());
         mvc.perform(get("/reviews/new").param("placeId",""+place).with(user(""+author))).andExpect(status().isOk()).andExpect(content().string(org.hamcrest.Matchers.containsString("Write a review")));
+        mvc.perform(post("/reviews/new").with(user(""+author)).with(csrf()).param("placeId",""+place)
+                        .param("rating","0").param("body","short"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("aria-describedby=\"rating-error\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("aria-describedby=\"body-error\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString(">short</textarea>")));
         mvc.perform(post("/reviews/new").with(user(""+author)).with(csrf()).param("placeId",""+place).param("rating","5").param("body","A thoughtful review")).andExpect(status().is3xxRedirection());
         mvc.perform(get("/users/{id}",author)).andExpect(status().isOk()).andExpect(content().string(org.hamcrest.Matchers.containsString("A thoughtful review")));
         mvc.perform(get("/v3/api-docs")).andExpect(status().isOk()).andExpect(content().string(org.hamcrest.Matchers.containsString("/api/v1/places/{id}/rating-summary")));

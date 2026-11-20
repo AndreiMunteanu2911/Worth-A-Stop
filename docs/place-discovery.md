@@ -1,6 +1,6 @@
 # Google place discovery
 
-The discovery implementation uses Places API (New) for explicit text search, nearby discovery and verified place details, and Maps JavaScript API for map display. The Java 21 build and automated tests pass; live Google and browser verification remain pending.
+Discovery uses Places API (New) for explicit text search, nearby discovery and verified place details, and Maps JavaScript API for map display.
 
 ## Configuration
 
@@ -14,6 +14,8 @@ GOOGLE_MAPS_BROWSER_API_KEY=
 `run.ps1` loads these names along with the existing MySQL credentials. Spring Boot launched directly from an IDE needs the same environment variables. The browser key is sent to discovery pages for Maps JavaScript API; restrict it to the application's website origins. The server key stays on the backend and is sent to Places API in an HTTP header. Restrict it to Places API (New) and the server's public IP. The application does not read keys from source files. Existing `.env` credentials are preserved.
 
 ## Routes and behavior
+
+Home and Explore both support text search. Explore renders the result list and its attribution when JavaScript is disabled. With JavaScript enabled, Explore updates the list without a full page load and keeps the previous results if the provider fails. On a narrow screen, use **List** and **Map** to switch views. When the map is available, focusing a place link or selecting its pin highlights the same result.
 
 - `GET /api/v1/places/search?q=...`: 2–100 character query, optional complete south/west/north/east rectangle (at most 0.25 degrees per axis), optional lat/lon center pair, category, minimum community rating, sort and limit.
 - `GET /api/v1/places/nearby?lat=...&lon=...`: radius 100–5000 meters; default 1500; maximum 20 candidates.
@@ -34,4 +36,4 @@ Google attribution and third-party attribution supplied with results are display
 
 ## Verification
 
-`mvnw.cmd -q clean verify` passed all 28 tests under Java 21. Isolated MySQL 8.4 tests applied V1/V2 and validated mappings, constraints, concurrent resolution and restart persistence. Provider tests used a local HTTP fixture or mocks, with no real Google requests. JavaScript syntax checks passed for maps.js, explore.js and place.js. Live provider behavior and browser layout/accessibility checks remain pending.
+Automated verification uses disposable MySQL 8.4, local provider fixtures, and mocked network responses. Offline headless browser checks exercise responsive layout, keyboard navigation, result and marker selection, and the list fallback when the map fails. Live Google behavior and hands-on assistive-technology checks remain unverified.

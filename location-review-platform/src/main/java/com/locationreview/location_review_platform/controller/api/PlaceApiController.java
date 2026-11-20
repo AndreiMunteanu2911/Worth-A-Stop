@@ -35,11 +35,24 @@ public class PlaceApiController {
     @ApiResponses({@ApiResponse(responseCode="401",description="Authentication required"),@ApiResponse(responseCode="403",description="CSRF rejected")})
     public PlaceService.PlaceView resolve(@RequestBody ResolveRequest request) { return places.resolve(request.googlePlaceId()); }
     @ExceptionHandler(PlaceProviderException.class)
-    ProblemDetail upstream(PlaceProviderException ex) { return ProblemDetail.forStatusAndDetail(HttpStatus.valueOf(ex.status()), ex.getMessage()); }
+    ProblemDetail upstream(PlaceProviderException ex) {
+        return problem(HttpStatus.valueOf(ex.status()), ex.getMessage(), "place_provider_error");
+    }
     @ExceptionHandler(ResponseStatusException.class)
-    ProblemDetail invalid(ResponseStatusException ex) { return ProblemDetail.forStatusAndDetail(ex.getStatusCode(), ex.getReason()); }
+    ProblemDetail invalid(ResponseStatusException ex) {
+        var status = ex.getStatusCode();
+        return problem(status, ex.getReason(), status.value() == 404 ? "place_not_found" : "invalid_discovery");
+    }
     @ExceptionHandler({org.springframework.http.converter.HttpMessageNotReadableException.class,
         org.springframework.web.method.annotation.MethodArgumentTypeMismatchException.class,
         org.springframework.web.bind.MissingServletRequestParameterException.class})
-    ProblemDetail malformed(Exception ex) { return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Invalid discovery request."); }
+    ProblemDetail malformed(Exception ex) {
+        return problem(HttpStatus.BAD_REQUEST, "Invalid discovery request.", "invalid_request");
+    }
+
+    private static ProblemDetail problem(HttpStatusCode status, String detail, String code) {
+        var problem = ProblemDetail.forStatusAndDetail(status, detail);
+        problem.setProperty("code", code);
+        return problem;
+    }
 }

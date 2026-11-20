@@ -2,8 +2,6 @@ package com.locationreview.location_review_platform.entity;
 
 import jakarta.persistence.*;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.math.BigDecimal;
 
 @Entity
 @Table(name = "review_likes")

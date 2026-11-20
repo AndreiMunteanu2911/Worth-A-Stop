@@ -20,7 +20,6 @@ public class FeedWebController {
     @GetMapping("/feed")
     String read(Principal principal, @RequestParam(defaultValue = "0") int page, Model model,
             HttpServletResponse response) {
-        model.addAttribute("feedPage", true);
         try {
             model.addAttribute("feed", feed.read(Long.parseLong(principal.getName()), page, 20));
         } catch (AccountException ex) {

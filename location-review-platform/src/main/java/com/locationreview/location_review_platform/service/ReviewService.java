@@ -26,6 +26,7 @@ public class ReviewService {
         }
     }
     public record PlaceRef(long id, String name, String googlePlaceId) {}
+    public record RecentReview(long id, Author author, PlaceRef place, int rating, String excerpt) {}
     public record ReviewView(long id, Author author, PlaceRef place, int rating, String body, LocalDate visitDate,
                              Instant createdAt, Instant updatedAt, long likeCount, boolean likedByMe) {}
     public record RatingSummary(long reviewCount, Double average, Map<Integer, Long> ratingCounts) {}
@@ -57,6 +58,18 @@ public class ReviewService {
     private ReviewView detailView(Review review, Long viewerId) {
         var summaries = likes.summaries(List.of(review.getId()), viewerId == null ? 0 : viewerId);
         return view(review, summaries.isEmpty() ? null : summaries.getFirst());
+    }
+
+    @Transactional(readOnly = true)
+    public List<RecentReview> recent() {
+        return reviews.findTop3ByOrderByCreatedAtDescIdDesc().stream().map(review -> {
+            var place = review.getPlace();
+            String text = review.getBody();
+            String excerpt = text.codePointCount(0, text.length()) > 180
+                    ? text.substring(0, text.offsetByCodePoints(0, 180)) + "…" : text;
+            return new RecentReview(review.getId(), Author.from(review.getAuthor()),
+                    new PlaceRef(place.getId(), place.getName(), place.getGooglePlaceId()), review.getRating(), excerpt);
+        }).toList();
     }
 
     private PageResponse<ReviewView> pageView(Page<Review> page, Long viewerId) {

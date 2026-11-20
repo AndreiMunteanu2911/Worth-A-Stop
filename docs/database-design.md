@@ -1,11 +1,11 @@
 # Database design
 
-The application uses MySQL 8.4 and Flyway migration `V1__initial_schema.sql`. Hibernate validates the schema at startup; it does not create or update tables. The migration is intended for an empty schema and does not automatically baseline a populated database. IDs are generated signed `BIGINT`s. Timestamps are `DATETIME(6)` interpreted as UTC by the JDBC session and Hibernate; review visit dates are `DATE`. Tables use InnoDB and `utf8mb4_0900_ai_ci`.
+The application uses MySQL 8.4. Flyway applies `V1__initial_schema.sql` and then `V2__google_place_identity.sql`. V1 starts from an empty schema, and Flyway does not automatically baseline a populated database. Hibernate validates the resulting schema at startup. IDs are generated signed `BIGINT`s. Timestamps are `DATETIME(6)` interpreted as UTC by JDBC and Hibernate. Review visit dates use `DATE`. Tables use InnoDB and `utf8mb4_0900_ai_ci`, with a binary ASCII collation for Google place IDs.
 
 | Table | Stored data and database constraints |
 | --- | --- |
 | `users` | Username and email are individually unique under the case-insensitive collation; password hash, display name, biography and timestamps. |
-| `places` | Unique OSM type and positive ID; name, category, tag, bounded coordinates, optional address/contact fields, source and metadata timestamps. Type is NODE, WAY or RELATION. |
+| `places` | Unique, case-sensitive Google ID for new identities. Legacy rows keep a unique OSM type and positive ID, with their preserved metadata. The source constraint excludes provider metadata from stored Google rows. |
 | `reviews` | Author and place foreign keys, unique author/place pair, rating 1–5, body, optional visit date and timestamps. |
 | `review_likes` | Review and user foreign keys, unique review/user pair and creation time. |
 | `review_comments` | Review and author foreign keys, body and timestamps. |
@@ -33,7 +33,7 @@ erDiagram
   USER ||--o{ FOLLOW : followed
 ```
 
-Accounts use the users table for registration, authentication and profile editing. Place discovery, reviews, collections and saved places use the existing schema.
+The feed derives activity from `reviews.created_at` and currently public `collections.published_at`, filtered through `follows`. Review author and collection owner indexes support this lookup. The feed requires no activity table. Account passwords are stored as BCrypt hashes.
 
 Bookmarks use a unique user/place pair and the `(user_id, created_at, id)` index for newest-first pagination. A MySQL upsert preserves the original row and timestamp on repeated or concurrent saves. Removal is scoped to the signed-in user's pair. Both operations leave the underlying place and collection memberships intact. See [Saved places](bookmarks.md).
 
